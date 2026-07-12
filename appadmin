@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>警備検定トレーニング 問題編集ツール</title>
+<style>
+  :root{
+    --navy:#1c2b4a; --navy-deep:#12203a; --vest:#e8c400;
+    --bg:#f4f6f9; --card:#fff; --ink:#1a2233; --sub:#5a6478;
+    --line:#d8dee9; --ok:#1e7a46; --ok-bg:#e8f5ec; --ng:#b3261e; --ng-bg:#fbebea;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px}
+  .stripe{height:8px;background:repeating-linear-gradient(-45deg,var(--vest) 0 12px,var(--navy) 12px 24px)}
+  header{background:var(--navy);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  header h1{font-size:1rem;font-weight:700;margin-right:auto}
+  header .tag{font-size:.7rem;background:var(--vest);color:var(--navy-deep);padding:2px 8px;border-radius:99px;font-weight:700}
+
+  button{font:inherit;cursor:pointer;border:none;border-radius:8px}
+  .btn{padding:9px 16px;font-weight:700}
+  .btn-primary{background:var(--vest);color:var(--navy-deep)}
+  .btn-outline{background:transparent;color:#fff;border:1px solid #8fa0c0;padding:9px 16px;font-weight:700}
+  .btn-white{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .btn-danger{background:none;color:var(--ng);text-decoration:underline;padding:6px}
+  .btn-small{padding:5px 10px;font-size:.8rem;border:1px solid var(--line);background:#fff;color:var(--ink)}
+
+  .layout{display:grid;grid-template-columns:340px 1fr;gap:20px;max-width:1240px;margin:20px auto;padding:0 20px}
+  @media (max-width:900px){ .layout{grid-template-columns:1fr} }
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+
+  /* 公開パネル */
+  .publish{max-width:1240px;margin:20px auto 0;padding:0 20px}
+  .publish-inner{background:#fff;border:2px solid var(--vest);border-radius:12px;padding:16px 20px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .publish-inner .txt{flex:1;min-width:260px}
+  .publish-inner h2{font-size:.95rem;margin-bottom:2px}
+  .publish-inner p{font-size:.8rem;color:var(--sub)}
+
+  /* 検定タブ */
+  .exam-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .exam-tab{padding:7px 12px;border:1px solid var(--line);background:#fff;border-radius:99px;
+    font-size:.82rem;color:var(--ink);white-space:nowrap}
+  .exam-tab.active{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:700}
+  .exam-tab .n{opacity:.7;font-size:.75rem;margin-left:4px}
+
+  /* 一覧 */
+  .list-head{display:flex;gap:8px;align-items:center;margin:12px 0}
+  .list-head select{flex:1;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit}
+  .q-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+  .q-item:hover{border-color:var(--navy)}
+  .q-item.active{border-color:var(--navy);background:#eef2f9}
+  .q-item .cat{font-size:.7rem;font-weight:700;color:var(--navy);background:#eef2f9;border-radius:99px;padding:1px 8px}
+  .q-item.active .cat{background:#fff}
+  .q-item .txt{font-size:.85rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .q-item .media-flag{font-size:.7rem;color:var(--sub)}
+  .empty-note{font-size:.85rem;color:var(--sub);text-align:center;padding:20px 0}
+
+  /* フォーム */
+  .form-title{font-size:1rem;font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  label.f{display:block;font-size:.8rem;font-weight:700;color:var(--sub);margin:14px 0 4px}
+  input[type=text],textarea,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+  textarea{resize:vertical}
+  .choice-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .choice-row input[type=radio]{width:20px;height:20px;flex-shrink:0}
+  .choice-row .num{width:20px;text-align:center;font-weight:700;color:var(--sub);flex-shrink:0}
+  .hint{font-size:.75rem;color:var(--sub);margin-top:4px}
+  .warn{font-size:.8rem;color:var(--ng);background:var(--ng-bg);border-radius:8px;padding:8px 10px;margin-top:8px;display:none}
+  .media-preview{margin-top:10px}
+  .media-preview img,.media-preview video{max-width:320px;width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+  .form-actions{display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap}
+  .save-msg{font-size:.82rem;color:var(--ok);font-weight:700}
+
+  .note{max-width:1240px;margin:0 auto 30px;padding:0 20px;font-size:.78rem;color:var(--sub)}
+  dialog{border:none;border-radius:14px;padding:0;width:min(480px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  dialog::backdrop{background:rgba(18,32,58,.5)}
+  .pv-head{background:var(--navy);color:#fff;padding:10px 16px;font-size:.85rem;font-weight:700;
+    display:flex;justify-content:space-between;align-items:center}
+  .pv-body{padding:18px}
+  .pv-q{font-size:1.05rem;font-weight:700;margin-bottom:14px}
+  .pv-choice{display:block;width:100%;min-height:50px;padding:12px;margin-bottom:10px;background:#fff;
+    border:2px solid var(--line);border-radius:10px;text-align:left;font-size:.95rem}
+  .pv-choice.correct{border-color:var(--ok);background:var(--ok-bg);font-weight:700}
+  .pv-exp{font-size:.88rem;background:var(--bg);border-radius:10px;padding:12px;margin-top:6px;white-space:pre-wrap}
+  .pv-exp img,.pv-exp video{width:100%;border-radius:8px;margin-top:10px;display:block}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<header>
+  <h1>問題編集ツール <span class="tag">作成者用</span></h1>
+  <button class="btn-outline" id="btnImport">作業ファイル(JSON)を読み込む</button>
+  <button class="btn-outline" id="btnExportJson">作業ファイル(JSON)を保存</button>
+  <input type="file" id="fileInput" accept=".json,application/json" class="hidden">
+</header>
+
+<!-- 公開用の書き出し -->
+<div class="publish">
+  <div class="publish-inner">
+    <div class="txt">
+      <h2>🚀 GitHubで公開する</h2>
+      <p>問題を反映した <strong>index.html</strong> を書き出します。このファイルをGitHubにアップすれば、そのまま公開できます。</p>
+    </div>
+    <button class="btn btn-primary" id="btnExportApp">index.html を書き出す</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- 左：検定と問題一覧 -->
+  <div class="panel">
+    <label class="f" style="margin-top:0">検定（タブで切り替え）</label>
+    <div class="exam-tabs" id="examTabs"></div>
+    <div style="display:flex;gap:6px">
+      <button class="btn-small" id="btnAddExam" style="flex:1">＋ 検定を追加</button>
+      <button class="btn-small" id="btnRenameExam" style="flex:1">名前を変更</button>
+      <button class="btn-small" id="btnDeleteExam" style="flex:1;color:var(--ng)">削除</button>
+    </div>
+
+    <div class="list-head">
+      <select id="catFilter"><option value="__all__">すべての分野</option></select>
+      <button class="btn btn-white" id="btnNew" style="padding:8px 12px">＋ 新規</button>
+    </div>
+    <div id="qList"></div>
+  </div>
+
+  <!-- 右：編集フォーム -->
+  <div class="panel">
+    <div class="form-title">
+      <span id="formTitle">問題の編集</span>
+      <button class="btn-small" id="btnPreview">プレビュー</button>
+    </div>
+    <p class="hint" id="editingExam"></p>
+
+    <label class="f">分野（カテゴリ）</label>
+    <input type="text" id="fCat" list="catOptions" placeholder="例：関係法令">
+    <datalist id="catOptions"></datalist>
+
+    <label class="f">問題文</label>
+    <textarea id="fQuestion" rows="3" placeholder="問題文を入力してください"></textarea>
+
+    <label class="f">選択肢（4つ）と正解の指定</label>
+    <div id="choiceRows"></div>
+    <p class="hint">左の○を選ぶとその選択肢が正解になります。学習画面では並び順は毎回シャッフルされます。</p>
+
+    <label class="f">解説文</label>
+    <textarea id="fExp" rows="6" placeholder="答えは「〇〇」。（結論）&#10;&#10;【覚え方】&#10;…と書くと分かりやすくなります。改行はそのまま表示されます。"></textarea>
+
+    <label class="f">解説のメディア（挿絵・動画）</label>
+    <select id="fMediaType">
+      <option value="none">なし</option>
+      <option value="image">画像（挿絵・写真）</option>
+      <option value="video">動画（実技の実演など）</option>
+    </select>
+    <div id="mediaControls" class="hidden" style="margin-top:8px">
+      <input type="file" id="mediaFile">
+      <p class="hint" id="mediaHint"></p>
+      <label class="f">または URL を指定（長い動画向け・オンライン時のみ再生）</label>
+      <input type="text" id="mediaUrl" placeholder="https://…（mp4など）">
+      <label class="f">キャプション（説明文）</label>
+      <input type="text" id="mediaCaption" placeholder="例：図：胸骨圧迫の位置">
+      <div class="warn" id="sizeWarn"></div>
+      <div class="media-preview" id="mediaPreview"></div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" id="btnSave">この問題を保存</button>
+      <button class="btn btn-white" id="btnDup">複製して新規</button>
+      <button class="btn-danger" id="btnDelete">この問題を削除</button>
+      <span class="save-msg" id="saveMsg"></span>
+    </div>
+  </div>
+</div>
+
+<p class="note">
+  ⚠ 検定の過去問題や市販問題集の文章をそのまま入力しないでください（著作権侵害となるおそれがあります）。
+  教本・法令の内容を基に、自分の言葉で作成したオリジナル問題のみ登録してください。<br>
+  ⚠ GitHubで公開すると内容は誰でも見られます。施設名・所在地など、現場が特定できる情報は絶対に入力しないでください。
+</p>
+
+<dialog id="pvDialog">
+  <div class="pv-head"><span>学習画面プレビュー</span><button class="btn-small" id="pvClose">閉じる</button></div>
+  <div class="pv-body" id="pvBody"></div>
+</dialog>
+
+<!-- ▼ 学習アプリ本体のテンプレート（書き出し時にここへ問題データを差し込む） -->
+<script type="text/plain" id="appTemplate"><!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>警備検定トレーニング</title>
+<style>
+  :root{
+    --navy:#1c2b4a;        /* 制服の紺 */
+    --navy-deep:#12203a;
+    --vest:#e8c400;        /* 反射ベストの黄 */
+    --bg:#f4f6f9;
+    --card:#ffffff;
+    --ink:#1a2233;
+    --sub:#5a6478;
+    --line:#d8dee9;
+    --ok:#1e7a46;
+    --ok-bg:#e8f5ec;
+    --ng:#b3261e;
+    --ng-bg:#fbebea;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{font-size:18px}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;
+    min-height:100vh;
+  }
+  /* 反射ベスト風ストライプ（このアプリの署名的要素） */
+  .stripe{
+    height:10px;
+    background:repeating-linear-gradient(-45deg,var(--vest) 0 14px,var(--navy) 14px 28px);
+  }
+  header{
+    background:var(--navy);color:#fff;
+    padding:14px 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  header h1{font-size:1.05rem;font-weight:700;letter-spacing:.04em}
+  header .tag{font-size:.72rem;background:var(--vest);color:var(--navy-deep);
+    padding:2px 8px;border-radius:99px;font-weight:700;white-space:nowrap}
+  main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px;margin-bottom:16px}
+
+  button{font:inherit;cursor:pointer;border:none;border-radius:12px}
+  .btn-main{
+    display:block;width:100%;min-height:60px;padding:14px;
+    background:var(--navy);color:#fff;font-size:1.1rem;font-weight:700;
+  }
+  .btn-main:active{background:var(--navy-deep)}
+  .btn-sub{
+    display:block;width:100%;min-height:52px;padding:12px;
+    background:#fff;color:var(--navy);border:2px solid var(--navy);
+    font-size:1rem;font-weight:700;margin-top:10px;
+  }
+  .btn-ghost{
+    display:block;width:100%;min-height:48px;padding:10px;
+    background:none;color:var(--sub);font-size:.95rem;text-decoration:underline;
+  }
+
+  /* ホーム */
+  .home-lead{font-size:.95rem;color:var(--sub);margin-bottom:14px}
+  .cat-btn{
+    display:flex;justify-content:space-between;align-items:center;
+    width:100%;min-height:60px;padding:12px 16px;margin-bottom:10px;
+    background:#fff;border:2px solid var(--line);border-radius:12px;
+    font-size:1.02rem;font-weight:700;color:var(--ink);text-align:left;
+  }
+  .cat-btn .count{font-size:.85rem;color:var(--sub);font-weight:400;white-space:nowrap}
+  .cat-btn.selected{border-color:var(--navy);background:#eef2f9}
+  .meta-line{font-size:.8rem;color:var(--sub);text-align:center;margin-top:6px}
+
+  /* 出題 */
+  .progress{display:flex;justify-content:space-between;align-items:center;
+    font-size:.9rem;color:var(--sub);margin-bottom:10px}
+  .bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
+  .bar > div{height:100%;background:var(--vest);width:0%}
+  .q-cat{display:inline-block;font-size:.75rem;font-weight:700;color:var(--navy);
+    background:#eef2f9;border-radius:99px;padding:2px 10px;margin-bottom:10px}
+  .q-text{font-size:1.12rem;font-weight:700;margin-bottom:18px}
+  .choice{
+    display:block;width:100%;min-height:58px;padding:14px 16px;margin-bottom:12px;
+    background:#fff;border:2px solid var(--line);border-radius:12px;
+    font-size:1.02rem;text-align:left;color:var(--ink);
+  }
+  .choice:active{background:#eef2f9}
+  .choice.correct{border-color:var(--ok);background:var(--ok-bg);font-weight:700}
+  .choice.wrong{border-color:var(--ng);background:var(--ng-bg)}
+  .choice:disabled{cursor:default;opacity:1}
+  .choice.dim:disabled{opacity:.55}
+
+  /* 判定 */
+  .verdict{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;margin-bottom:8px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .verdict .mark{font-size:1.7rem}
+  .exp-label{font-size:.8rem;font-weight:700;color:var(--sub);letter-spacing:.08em;margin:14px 0 6px}
+  .exp-text{font-size:1rem;white-space:pre-wrap;line-height:1.75}
+  .media-box{margin-top:14px}
+  .media-box img,.media-box video{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+  .media-cap{font-size:.8rem;color:var(--sub);margin-top:6px;text-align:center}
+  .offline-note{font-size:.8rem;color:var(--ng);margin-top:6px;display:none}
+
+  /* 結果 */
+  .score-big{text-align:center;padding:8px 0 4px}
+  .score-big .num{font-size:3rem;font-weight:800;color:var(--navy)}
+  .score-big .den{font-size:1.1rem;color:var(--sub)}
+  .score-msg{text-align:center;font-weight:700;margin-bottom:14px}
+  .cat-row{display:flex;justify-content:space-between;padding:10px 4px;
+    border-bottom:1px solid var(--line);font-size:.95rem}
+  .cat-row:last-child{border-bottom:none}
+
+  .hidden{display:none}
+  footer{padding:16px;text-align:center;font-size:.72rem;color:var(--sub)}
+
+  /* 実績 */
+  .ach-progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:12px 0 18px}
+  .ach-progress > div{height:100%;background:var(--vest);width:0%;transition:width .5s}
+  .ach-card{display:flex;align-items:center;gap:14px;padding:12px;margin-bottom:10px;
+    border:1px solid var(--line);border-radius:12px;background:#fff}
+  .ach-card.locked{opacity:.55;background:#f7f8fa}
+  .ach-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;flex-shrink:0;background:#eef2f9}
+  .ach-card.unlocked .ach-icon{background:var(--vest)}
+  .ach-body{flex:1;min-width:0}
+  .ach-name{font-weight:700;font-size:1rem}
+  .ach-desc{font-size:.82rem;color:var(--sub)}
+  .ach-mini-bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:6px}
+  .ach-mini-bar > div{height:100%;background:var(--navy);width:0%}
+  .ach-state{font-size:.78rem;color:var(--sub);white-space:nowrap;flex-shrink:0}
+  .ach-card.unlocked .ach-state{color:var(--ok);font-weight:700}
+
+  /* 実績解放バナー（結果画面） */
+  .unlock-banner{background:linear-gradient(135deg,#fff7d6,#ffe9a8);
+    border:2px solid var(--vest);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+  .unlock-banner h3{font-size:.9rem;color:var(--navy-deep);margin-bottom:8px}
+  .unlock-item{display:flex;align-items:center;gap:10px;padding:4px 0}
+  .unlock-item .ic{font-size:1.3rem}
+
+  /* 自作の確認ダイアログ（スマホでconfirm/alertが効かない環境でも動くようにする） */
+  .modal-overlay{position:fixed;inset:0;background:rgba(18,32,58,.55);
+    display:none;align-items:center;justify-content:center;padding:24px;z-index:1000}
+  .modal-overlay.show{display:flex}
+  .modal{background:#fff;border-radius:16px;padding:22px;max-width:360px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal-msg{font-size:1rem;line-height:1.7;margin-bottom:20px;white-space:pre-wrap}
+  .modal-actions{display:flex;flex-direction:column;gap:10px}
+  .modal-actions .btn-main,.modal-actions .btn-sub{margin-top:0}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<header>
+  <h1 id="appTitle">警備検定トレーニング</h1>
+  <span class="tag">オフライン対応</span>
+</header>
+
+<main>
+  <!-- 検定選択 -->
+  <section id="screenExam">
+    <div class="card">
+      <p class="home-lead">学習する検定を選んでください。</p>
+      <div id="examList"></div>
+    </div>
+    <button class="btn-sub" id="btnAchievements">🏅 実績を見る</button>
+  </section>
+
+  <!-- 実績 -->
+  <section id="screenAchievements" class="hidden">
+    <div class="card">
+      <button class="btn-ghost" id="btnBackFromAch" style="text-align:left;padding-left:0">‹ 検定の選択に戻る</button>
+      <h2 style="font-size:1.1rem;margin-bottom:4px">実績</h2>
+      <p class="home-lead" id="achSummary"></p>
+      <div class="ach-progress"><div id="achProgressBar"></div></div>
+      <div id="achList"></div>
+      <button class="btn-ghost" id="btnResetProgress" style="margin-top:14px">学習記録をリセットする</button>
+    </div>
+  </section>
+
+  <!-- ホーム（分野選択） -->
+  <section id="screenHome" class="hidden">
+    <div class="card">
+      <button class="btn-ghost" id="btnBackToExam" style="text-align:left;padding-left:0">‹ 検定の選択に戻る</button>
+      <p class="home-lead" id="homeLead">分野を選んで「学習をはじめる」を押してください。電波のない場所でも使えます。</p>
+      <div id="catList"></div>
+      <button class="btn-main" id="btnStart">学習をはじめる</button>
+      <p class="meta-line" id="metaLine"></p>
+    </div>
+  </section>
+
+  <!-- 出題 -->
+  <section id="screenQuiz" class="hidden">
+    <div class="progress">
+      <span id="progText"></span><span id="progCat"></span>
+    </div>
+    <div class="bar"><div id="progBar"></div></div>
+    <div class="card">
+      <span class="q-cat" id="qCat"></span>
+      <p class="q-text" id="qText"></p>
+      <div id="choiceArea"></div>
+    </div>
+
+    <!-- 判定と解説（回答後に表示） -->
+    <div class="card hidden" id="feedback">
+      <div class="verdict" id="verdict"></div>
+      <p id="correctLine" style="font-size:.95rem"></p>
+      <p class="exp-label">解説</p>
+      <p class="exp-text" id="expText"></p>
+      <div class="media-box" id="mediaBox"></div>
+      <button class="btn-main" id="btnNext" style="margin-top:18px">次の問題へ</button>
+    </div>
+    <button class="btn-sub" id="btnQuit" style="border-color:var(--line);color:var(--sub)">中断して分野の選択に戻る</button>
+  </section>
+
+  <!-- 結果 -->
+  <section id="screenResult" class="hidden">
+    <div id="unlockArea"></div>
+    <div class="card">
+      <div class="score-big">
+        <span class="num" id="scoreNum">0</span><span class="den" id="scoreDen">/0問</span>
+      </div>
+      <p class="score-msg" id="scoreMsg"></p>
+      <div id="catResult"></div>
+    </div>
+    <button class="btn-main hidden" id="btnRetryWrong">間違えた問題だけ復習する</button>
+    <button class="btn-sub" id="btnViewAch">🏅 実績を見る</button>
+    <button class="btn-sub" id="btnHome">ホームに戻る</button>
+  </section>
+</main>
+
+<!-- 自作の確認ダイアログ（confirm/alertの代わり。スマホでも確実に反応する） -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <p class="modal-msg" id="modalMsg"></p>
+    <div class="modal-actions">
+      <button class="btn-main" id="modalOk">OK</button>
+      <button class="btn-sub" id="modalCancel">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<footer>プロトタイプ版 v0.1 ｜ 問題はすべて自作のオリジナル問題です</footer>
+
+<script>
+"use strict";
+/* =========================================================
+   問題データ（編集画面から書き出した questions.json と同形式）
+   ここに埋め込まれているためオフラインで動作する。
+   ========================================================= */
+const EXAMS = __EXAMS_DATA__;
+
+/* ====================== 状態 ====================== */
+let data = EXAMS[0];          // 現在選択中の検定データ
+let selectedCat = "__all__";   // 選択中カテゴリ
+let queue = [];                // 出題キュー（問題の配列）
+let idx = 0;                   // 現在の問題番号
+let results = [];              // {q, correct} の配列
+let answered = false;
+let sessionStreak = 0;         // このセッションの連続正解数
+let sessionUnlocks = [];       // このセッションで解放した実績
+
+/* ====================== 学習記録（端末に保存） ======================
+   端末のブラウザ内（localStorage）に保存するので、アプリを閉じても実績が残る。
+   保存できない環境（プライベートモード等）ではメモリ上だけで動く。 */
+const STORE_KEY = "keibi_progress_v1";
+const defaultProgress = () => ({
+  mastered: {},      // 正解したことのある問題ID { "q0001": true, ... }
+  totalAnswered: 0,  // 累計 回答数
+  totalCorrect: 0,   // 累計 正解数
+  bestStreak: 0,     // 最高連続正解数
+  perfectRuns: 0,    // 満点セッションの回数
+  unlocked: {}       // 解放済み実績ID { "first": true, ... }
+});
+let progress = loadProgress();
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return Object.assign(defaultProgress(), JSON.parse(raw));
+  } catch (e) { /* 保存不可の環境では既定値で続行 */ }
+  return defaultProgress();
+}
+function saveProgress() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); }
+  catch (e) { /* 保存できなくてもアプリは動く */ }
+}
+
+/* --- 実績の定義 ---
+   check(p): 解放条件を満たすか / progressText(p): 「3/10」などの進捗表示 */
+const ALL_QUESTION_IDS = () => EXAMS.flatMap(e => e.questions.map(q => q.id));
+const ACHIEVEMENTS = [
+  { id: "first", icon: "🔰", name: "はじめの一歩", desc: "問題に1問チャレンジする",
+    check: p => p.totalAnswered >= 1,
+    progressText: p => `${Math.min(p.totalAnswered,1)}/1` },
+  { id: "correct10", icon: "✅", name: "10問正解", desc: "累計で10問正解する",
+    check: p => p.totalCorrect >= 10,
+    progressText: p => `${Math.min(p.totalCorrect,10)}/10` },
+  { id: "streak5", icon: "🔥", name: "5問連続正解", desc: "1回の学習で5問連続で正解する",
+    check: p => p.bestStreak >= 5,
+    progressText: p => `${Math.min(p.bestStreak,5)}/5` },
+  { id: "perfect", icon: "💯", name: "満点達成", desc: "1回の学習をすべて正解で終える",
+    check: p => p.perfectRuns >= 1,
+    progressText: p => `${Math.min(p.perfectRuns,1)}/1` },
+  { id: "master25", icon: "📚", name: "25問マスター", desc: "違う問題を25問、正解する",
+    check: p => Object.keys(p.mastered).length >= 25,
+    progressText: p => `${Math.min(Object.keys(p.mastered).length,25)}/25` },
+  { id: "allclear", icon: "🏆", name: "全問制覇", desc: "登録されている全ての問題を正解する",
+    check: p => { const ids = ALL_QUESTION_IDS(); return ids.length > 0 && ids.every(id => p.mastered[id]); },
+    progressText: p => { const ids = ALL_QUESTION_IDS();
+      return `${ids.filter(id => p.mastered[id]).length}/${ids.length}`; } }
+];
+
+/* 1問回答するたびに記録を更新し、新しく解放された実績を返す */
+function recordAnswer(q, isCorrect) {
+  progress.totalAnswered++;
+  if (isCorrect) {
+    progress.totalCorrect++;
+    progress.mastered[q.id] = true;
+    sessionStreak++;
+    if (sessionStreak > progress.bestStreak) progress.bestStreak = sessionStreak;
+  } else {
+    sessionStreak = 0;
+  }
+  const newly = refreshUnlocks();
+  saveProgress();
+  return newly;
+}
+/* セッション終了時（満点判定など）に呼ぶ */
+function recordSessionEnd(isPerfect) {
+  if (isPerfect) progress.perfectRuns++;
+  const newly = refreshUnlocks();
+  saveProgress();
+  return newly;
+}
+/* 条件を満たした実績を解放し、今回新しく解放されたものの配列を返す */
+function refreshUnlocks() {
+  const newly = [];
+  ACHIEVEMENTS.forEach(a => {
+    if (!progress.unlocked[a.id] && a.check(progress)) {
+      progress.unlocked[a.id] = true;
+      newly.push(a);
+    }
+  });
+  return newly;
+}
+
+/* ====================== 共通ユーティリティ ====================== */
+const $ = (id) => document.getElementById(id);
+
+/* --- 自作ダイアログ（confirm/alertの代替）---
+   スマホのホーム画面起動（スタンドアロン）では標準のconfirm/alertが
+   無反応になることがあるため、画面内モーダルで確実に動くようにする。 */
+function showConfirm(message, onOk) {
+  $("modalMsg").textContent = message;
+  $("modalCancel").style.display = "block";
+  $("modalOk").textContent = "OK";
+  const overlay = $("modalOverlay");
+  const cleanup = () => {
+    overlay.classList.remove("show");
+    $("modalOk").onclick = null;
+    $("modalCancel").onclick = null;
+  };
+  $("modalOk").onclick = () => { cleanup(); if (onOk) onOk(); };
+  $("modalCancel").onclick = cleanup;
+  overlay.classList.add("show");
+}
+function showAlert(message, onClose) {
+  $("modalMsg").textContent = message;
+  $("modalCancel").style.display = "none";
+  $("modalOk").textContent = "OK";
+  const overlay = $("modalOverlay");
+  $("modalOk").onclick = () => {
+    overlay.classList.remove("show");
+    $("modalOk").onclick = null;
+    if (onClose) onClose();
+  };
+  overlay.classList.add("show");
+}
+
+const shuffle = (arr) => {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+function show(screen) {
+  ["screenExam", "screenAchievements", "screenHome", "screenQuiz", "screenResult"]
+    .forEach(s => $(s).classList.add("hidden"));
+  $(screen).classList.remove("hidden");
+  window.scrollTo(0, 0);
+}
+
+/* ====================== 実績画面 ====================== */
+function renderAchievements() {
+  const unlockedCount = ACHIEVEMENTS.filter(a => progress.unlocked[a.id]).length;
+  $("achSummary").textContent =
+    `解放した実績：${unlockedCount} / ${ACHIEVEMENTS.length}　（正解した問題：${Object.keys(progress.mastered).length}問）`;
+  $("achProgressBar").style.width = `${(unlockedCount / ACHIEVEMENTS.length) * 100}%`;
+
+  const list = $("achList");
+  list.innerHTML = "";
+  ACHIEVEMENTS.forEach(a => {
+    const on = !!progress.unlocked[a.id];
+    const card = document.createElement("div");
+    card.className = "ach-card " + (on ? "unlocked" : "locked");
+    const pt = a.progressText(progress);
+    const [cur, max] = pt.split("/").map(Number);
+    card.innerHTML = `
+      <div class="ach-icon">${on ? a.icon : "🔒"}</div>
+      <div class="ach-body">
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+        ${on ? "" : `<div class="ach-mini-bar"><div style="width:${max?Math.min(100,cur/max*100):0}%"></div></div>`}
+      </div>
+      <div class="ach-state">${on ? "解放済み" : pt}</div>`;
+    list.appendChild(card);
+  });
+}
+
+/* ====================== 検定選択 ====================== */
+function renderExamList() {
+  const list = $("examList");
+  list.innerHTML = "";
+  EXAMS.forEach((exam, i) => {
+    const count = exam.questions.length;
+    const ready = count > 0;
+    const b = document.createElement("button");
+    b.className = "cat-btn";
+    if (!ready) { b.style.opacity = ".6"; }
+    b.innerHTML = `<span>${exam.meta.title}</span>` +
+      (ready ? `<span class="count">${count}問 ›</span>`
+             : `<span class="count">準備中</span>`);
+    b.onclick = () => {
+      if (!ready) { showAlert("この検定はまだ問題が登録されていません。"); return; }
+      data = exam;
+      selectedCat = "__all__";
+      renderHome();
+      show("screenHome");
+    };
+    list.appendChild(b);
+  });
+}
+
+/* ====================== ホーム ====================== */
+function categories() {
+  const map = new Map();
+  data.questions.forEach(q => map.set(q.category, (map.get(q.category) || 0) + 1));
+  return map;
+}
+function renderHome() {
+  $("appTitle").textContent = data.meta.title || "警備検定トレーニング";
+  const list = $("catList");
+  list.innerHTML = "";
+  const addBtn = (key, label, count) => {
+    const b = document.createElement("button");
+    b.className = "cat-btn" + (selectedCat === key ? " selected" : "");
+    b.innerHTML = `<span>${label}</span><span class="count">${count}問</span>`;
+    b.onclick = () => { selectedCat = key; renderHome(); };
+    list.appendChild(b);
+  };
+  addBtn("__all__", "すべての分野", data.questions.length);
+  categories().forEach((count, cat) => addBtn(cat, cat, count));
+  $("metaLine").textContent =
+    `${data.meta.title || ""}（更新日: ${data.meta.updatedAt || "不明"} / 全${data.questions.length}問）`;
+}
+
+/* ====================== 出題 ====================== */
+function startQuiz(questions) {
+  queue = shuffle(questions);
+  idx = 0;
+  results = [];
+  sessionStreak = 0;      // 連続正解はセッションごとにリセット
+  sessionUnlocks = [];    // このセッションで解放した実績
+  show("screenQuiz");
+  renderQuestion();
+}
+function renderQuestion() {
+  answered = false;
+  const q = queue[idx];
+  $("progText").textContent = `問題 ${idx + 1} / ${queue.length}`;
+  $("progCat").textContent = "";
+  $("progBar").style.width = `${(idx / queue.length) * 100}%`;
+  $("qCat").textContent = q.category;
+  $("qText").textContent = q.question;
+  $("feedback").classList.add("hidden");
+
+  const area = $("choiceArea");
+  area.innerHTML = "";
+  const correctText = q.choices[q.answer];
+  shuffle(q.choices).forEach(text => {
+    const b = document.createElement("button");
+    b.className = "choice";
+    b.textContent = text;
+    b.onclick = () => answer(b, text === correctText, correctText, q);
+    area.appendChild(b);
+  });
+}
+function answer(btn, isCorrect, correctText, q) {
+  if (answered) return;
+  answered = true;
+  results.push({ q, correct: isCorrect });
+
+  // 学習記録を更新（新しく解放された実績があれば貯めておく）
+  const newly = recordAnswer(q, isCorrect);
+  newly.forEach(a => sessionUnlocks.push(a));
+
+  document.querySelectorAll(".choice").forEach(c => {
+    c.disabled = true;
+    if (c.textContent === correctText) c.classList.add("correct");
+    else if (c === btn && !isCorrect) c.classList.add("wrong");
+    else c.classList.add("dim");
+  });
+
+  const v = $("verdict");
+  if (isCorrect) {
+    v.className = "verdict ok";
+    v.innerHTML = '<span class="mark">○</span> 正解です';
+    $("correctLine").textContent = "";
+  } else {
+    v.className = "verdict ng";
+    v.innerHTML = '<span class="mark">×</span> 不正解';
+    $("correctLine").textContent = `正解：${correctText}`;
+  }
+  $("expText").textContent = q.explanation || "（解説はありません）";
+  renderMedia(q.media);
+  $("btnNext").textContent = (idx + 1 >= queue.length) ? "結果を見る" : "次の問題へ";
+  $("feedback").classList.remove("hidden");
+  $("feedback").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function renderMedia(media) {
+  const box = $("mediaBox");
+  box.innerHTML = "";
+  if (!media || media.type === "none" || !media.src) return;
+
+  let el;
+  if (media.type === "image") {
+    el = document.createElement("img");
+    el.src = media.src;
+    el.alt = media.caption || "解説図";
+  } else if (media.type === "video") {
+    el = document.createElement("video");
+    el.src = media.src;
+    el.controls = true;
+    el.playsInline = true;
+    el.preload = "metadata";
+    // URL参照動画は圏外だと再生できないため注意書きを出す
+    if (/^https?:/.test(media.src)) {
+      el.onerror = () => { note.style.display = "block"; };
+    }
+  }
+  box.appendChild(el);
+  if (media.caption) {
+    const cap = document.createElement("p");
+    cap.className = "media-cap";
+    cap.textContent = media.caption;
+    box.appendChild(cap);
+  }
+  const note = document.createElement("p");
+  note.className = "offline-note";
+  note.textContent = "※ この動画はインターネット接続時のみ再生できます";
+  box.appendChild(note);
+  if (media.type === "video" && /^https?:/.test(media.src) && !navigator.onLine) {
+    note.style.display = "block";
+  }
+}
+
+/* ====================== 結果 ====================== */
+function renderResult() {
+  const total = results.length;
+  const good = results.filter(r => r.correct).length;
+  const rate = total ? Math.round((good / total) * 100) : 0;
+  $("scoreNum").textContent = good;
+  $("scoreDen").textContent = ` / ${total}問（正答率 ${rate}%）`;
+  $("scoreMsg").textContent =
+    rate >= 90 ? "合格圏です。この調子で仕上げましょう。" :
+    rate >= 70 ? "あと少し。間違えた問題を復習しましょう。" :
+                 "まずは間違えた問題の解説をじっくり読みましょう。";
+
+  // 分野別成績
+  const byCat = new Map();
+  results.forEach(r => {
+    const c = byCat.get(r.q.category) || { good: 0, total: 0 };
+    c.total++; if (r.correct) c.good++;
+    byCat.set(r.q.category, c);
+  });
+  const el = $("catResult");
+  el.innerHTML = "";
+  byCat.forEach((v, cat) => {
+    const row = document.createElement("div");
+    row.className = "cat-row";
+    row.innerHTML = `<span>${cat}</span><span>${v.good} / ${v.total}問</span>`;
+    el.appendChild(row);
+  });
+
+  const wrong = results.filter(r => !r.correct).map(r => r.q);
+  $("btnRetryWrong").classList.toggle("hidden", wrong.length === 0);
+  $("btnRetryWrong").onclick = () => startQuiz(wrong);
+
+  // 満点なら実績「満点達成」を判定し、解放分をまとめて表示
+  const isPerfect = total > 0 && good === total;
+  recordSessionEnd(isPerfect).forEach(a => sessionUnlocks.push(a));
+  renderUnlockBanner(sessionUnlocks);
+
+  show("screenResult");
+}
+function renderUnlockBanner(list) {
+  const area = $("unlockArea");
+  area.innerHTML = "";
+  if (!list || list.length === 0) return;
+  // 重複を除く
+  const seen = new Set();
+  const uniq = list.filter(a => (seen.has(a.id) ? false : seen.add(a.id)));
+  const banner = document.createElement("div");
+  banner.className = "unlock-banner";
+  banner.innerHTML = `<h3>🎉 新しい実績を解放しました！</h3>` +
+    uniq.map(a => `<div class="unlock-item"><span class="ic">${a.icon}</span><span>${a.name}</span></div>`).join("");
+  area.appendChild(banner);
+}
+
+/* ====================== イベント ====================== */
+$("btnBackToExam").onclick = () => { renderExamList(); show("screenExam"); };
+$("btnStart").onclick = () => {
+  const qs = selectedCat === "__all__"
+    ? data.questions
+    : data.questions.filter(q => q.category === selectedCat);
+  if (qs.length === 0) { showAlert("この分野には問題がありません。"); return; }
+  startQuiz(qs);
+};
+$("btnNext").onclick = () => {
+  idx++;
+  if (idx >= queue.length) renderResult();
+  else { renderQuestion(); window.scrollTo(0, 0); }
+};
+$("btnQuit").onclick = () => {
+  showConfirm("学習を中断して分野の選択に戻りますか？\n（この回の成績は保存されません）", () => show("screenHome"));
+};
+$("btnHome").onclick = () => show("screenHome");
+
+// 実績画面への遷移
+$("btnAchievements").onclick = () => { renderAchievements(); show("screenAchievements"); };
+$("btnViewAch").onclick = () => { renderAchievements(); show("screenAchievements"); };
+$("btnBackFromAch").onclick = () => { renderExamList(); show("screenExam"); };
+$("btnResetProgress").onclick = () => {
+  showConfirm("学習の記録と実績をすべて消去します。よろしいですか？\n（元に戻せません）", () => {
+    progress = defaultProgress();
+    saveProgress();
+    renderAchievements();
+  });
+};
+
+/* ====================== 初期表示 ====================== */
+renderExamList();
+show("screenExam");
+<\/script>
+</body>
+</html>
+</script>
+<script>
+const INITIAL_EXAMS = [
+  {
+    "meta": {
+      "title": "施設警備業務検定2級",
+      "version": 1,
+      "updatedAt": "2026-07-09"
+    },
+    "questions": [
+      {
+        "id": "q0001",
+        "category": "関係法令",
+        "question": "警備業法上、警備員になることができない者として正しいものは次のうちどれか。",
+        "choices": [
+          "18歳未満の者",
+          "20歳未満の者",
+          "25歳未満の者",
+          "年齢による制限はない"
+        ],
+        "answer": 0,
+        "explanation": "答えは「18歳未満の者」。警備員の仕事は事故や事件への対応など責任の重い場面があるため、警備業法で18歳未満の人は警備員になれないと決められています。\n\n【覚え方】警備員になれる年齢は「18歳から」。上限（何歳まで）は決まっていないので、高齢の方でも働けます。だから『年齢による制限はない』は誤りです。",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      },
+      {
+        "id": "q0002",
+        "category": "関係法令",
+        "question": "施設内で他人の物件を拾得した者は、原則としてどれだけの時間以内に施設占有者へ差し出さなければならないか。",
+        "choices": [
+          "24時間以内",
+          "48時間以内",
+          "7日以内",
+          "3か月以内"
+        ],
+        "answer": 0,
+        "explanation": "答えは「24時間以内」。施設の中で落とし物を拾ったら、自分で持ち続けず、速やかに（24時間以内に）その施設の管理者（占有者）に渡します。\n\n【数字の整理】混同しやすい3つの数字を分けて覚えましょう。\n・24時間 … 拾った物を『施設の管理者』に渡す期限（この問題）\n・7日 … 拾った人が『警察署長』に届け出る場合の期限\n・3か月 … 持ち主が現れなかったとき、拾った人が所有権を得られるまでの期間\n「渡すのは今日中（24時間）」とイメージすると覚えやすいです。",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      },
+      {
+        "id": "q0003",
+        "category": "警備業務の基本",
+        "question": "施設警備業務は、警備業法第2条の区分では何号警備業務にあたるか。",
+        "choices": [
+          "1号警備業務",
+          "2号警備業務",
+          "3号警備業務",
+          "4号警備業務"
+        ],
+        "answer": 0,
+        "explanation": "答えは「1号警備業務」。ビルや商業施設・駐車場などで、盗難や事故を警戒・防止するのが施設警備で、これは1号にあたります。\n\n【4つの号の覚え方】\n・1号 … 施設（動かない『場所』を守る）\n・2号 … 交通誘導・雑踏（『道路や人混み』の安全）\n・3号 … 貴重品・危険物の運搬（『運ぶ物』を守る）\n・4号 … 身辺警備（『人』を守るボディガード）\n『場所→道→物→人』の順と覚えると整理しやすいです。",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      },
+      {
+        "id": "q0004",
+        "category": "警備業務の基本",
+        "question": "警備員の権限について、正しい記述は次のうちどれか。",
+        "choices": [
+          "警備員には法律上、一般私人と同じ範囲の権限しかない",
+          "警備員は警察官と同様に職務質問を行う権限がある",
+          "警備員は施設内であれば所持品検査を強制できる",
+          "制服を着用している間は特別な権限が与えられる"
+        ],
+        "answer": 0,
+        "explanation": "答えは「一般私人と同じ範囲の権限しかない」。警備員は制服を着ていても警察官ではありません。特別な権限は与えられていない、というのが警備業法の大原則です。\n\n【現場での意味】\n・職務質問はできない → お願いして協力してもらう\n・手荷物検査や所持品検査は『相手が同意したとき』だけ。無理やりはできない\n・制服を着ても権限は増えない\nつまり警備員の武器は『強制力』ではなく『きちんとお願いする対応力』です。ここを取り違えると、相手の権利を侵害してトラブルになります。",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      },
+      {
+        "id": "q0005",
+        "category": "応急処置・消防",
+        "question": "成人に対する胸骨圧迫のテンポとして適切なものは次のうちどれか。",
+        "choices": [
+          "1分間に100〜120回",
+          "1分間に60〜80回",
+          "1分間に140〜160回",
+          "1分間に40〜60回"
+        ],
+        "answer": 0,
+        "explanation": "答えは「1分間に100〜120回」。かなり速いテンポです。深さは大人で約5cm、『強く・速く・絶え間なく』が合言葉です。\n\n【覚え方】1分間に約100回のテンポは、童謡『もしもしかめよ』や『アンパンマンのマーチ』とほぼ同じ速さと言われます。歌のリズムを思い出すと本番でも慌てません。押す場所は胸の真ん中（下の図）です。",
+        "media": {
+          "type": "image",
+          "src": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20220%22%3E%3Crect%20width%3D%22400%22%20height%3D%22220%22%20fill%3D%22%23f4f6f9%22%2F%3E%3Cellipse%20cx%3D%22200%22%20cy%3D%2260%22%20rx%3D%2234%22%20ry%3D%2238%22%20fill%3D%22%23c9d4e6%22%2F%3E%3Crect%20x%3D%22130%22%20y%3D%2298%22%20width%3D%22140%22%20height%3D%22100%22%20rx%3D%2226%22%20fill%3D%22%23c9d4e6%22%2F%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22140%22%20r%3D%2216%22%20fill%3D%22%23e8c400%22%20stroke%3D%22%231c2b4a%22%20stroke-width%3D%223%22%2F%3E%3Cline%20x1%3D%22200%22%20y1%3D%22112%22%20x2%3D%22200%22%20y2%3D%22168%22%20stroke%3D%22%231c2b4a%22%20stroke-width%3D%223%22%2F%3E%3Cline%20x1%3D%22172%22%20y1%3D%22140%22%20x2%3D%22228%22%20y2%3D%22140%22%20stroke%3D%22%231c2b4a%22%20stroke-width%3D%223%22%2F%3E%3Ctext%20x%3D%22200%22%20y%3D%22205%22%20font-size%3D%2215%22%20text-anchor%3D%22middle%22%20fill%3D%22%231a2233%22%20font-family%3D%22sans-serif%22%3E%E5%9C%A7%E8%BF%AB%E4%BD%8D%E7%BD%AE%EF%BC%9A%E8%83%B8%E3%81%AE%E7%9C%9F%E3%82%93%E4%B8%AD%EF%BC%88%E8%83%B8%E9%AA%A8%E3%81%AE%E4%B8%8B%E5%8D%8A%E5%88%86%EF%BC%89%3C%2Ftext%3E%3C%2Fsvg%3E",
+          "caption": "図：胸骨圧迫の位置（イメージ）"
+        }
+      },
+      {
+        "id": "q0006",
+        "category": "応急処置・消防",
+        "question": "粉末消火器を使用する際の正しい操作手順は次のうちどれか。",
+        "choices": [
+          "安全ピンを抜く → ホースを火元に向ける → レバーを握る",
+          "レバーを握る → 安全ピンを抜く → ホースを火元に向ける",
+          "ホースを火元に向ける → レバーを握る → 安全ピンを抜く",
+          "安全ピンを抜く → レバーを握る → ホースを火元に向ける"
+        ],
+        "answer": 0,
+        "explanation": "答えは「安全ピンを抜く → ホースを火元に向ける → レバーを握る」。\n\n【覚え方】頭文字で「ピン・ホース・レバー」。順番を間違えて先にレバーを握ると、狙う前に薬剤が出てしまいます。だから『抜く→向ける→握る』の順です。\n\n【使い方のコツ】炎の先ではなく火の根元を狙い、手前から掃くように左右に振ります。屋外では風上に立つと、薬剤や煙が自分にかからず安全です。（編集画面から実演動画を添付すると、ここに動画が表示されます）",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      },
+      {
+        "id": "q0007",
+        "category": "施設警備",
+        "question": "出入管理業務の基本として、最も適切なものは次のうちどれか。",
+        "choices": [
+          "入館資格を確認したうえで入館させる",
+          "急いでいる来訪者は先に通してから記録する",
+          "顔見知りの業者は確認を省略してよい",
+          "退館時の確認は原則不要である"
+        ],
+        "answer": 0,
+        "explanation": "答えは「入館資格を確認したうえで入館させる」。出入管理は『確認してから通す』が大原則です。\n\n【なぜ例外を作らないのか】『顔見知りだから』『急いでいるから』と手順を飛ばすと、まさにそこが侵入や物の持ち出しの抜け道になります。悪意のある人はその『いつもの省略』を狙います。誰にでも同じ手順を守ることが、結果的に施設と自分を守ります。",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      },
+      {
+        "id": "q0008",
+        "category": "施設警備",
+        "question": "巡回中に不審な物件（持ち主不明の袋など）を発見した場合、最初に取るべき行動として最も適切なものはどれか。",
+        "choices": [
+          "触れずにその場を確保し、防災センター等へ報告する",
+          "中身を開けて確認する",
+          "すぐに施設外へ運び出す",
+          "その場を離れて次の巡回箇所へ進む"
+        ],
+        "answer": 0,
+        "explanation": "答えは「触れずにその場を確保し、防災センター等へ報告する」。\n\n【覚え方】不審物は「さわらない・動かさない・近づけない・報告する」。中身を開けたり運び出したりするのは、万一爆発物だった場合に非常に危険なので絶対にしません。まず人を近づけないように現場を守り、上位者や警察の指示を仰ぐのが正解です。『見なかったことにして通り過ぎる』のも、被害を防げないため誤りです。",
+        "media": {
+          "type": "none",
+          "src": "",
+          "caption": ""
+        }
+      }
+    ]
+  },
+  {
+    "meta": {
+      "title": "施設警備業務検定1級",
+      "version": 1,
+      "updatedAt": "2026-07-09"
+    },
+    "questions": []
+  },
+  {
+    "meta": {
+      "title": "交通誘導警備業務検定2級",
+      "version": 1,
+      "updatedAt": "2026-07-09"
+    },
+    "questions": []
+  }
+];
+</script>
+<script>
+"use strict";
+/* =====================================================================
+   問題編集ツール
+   - 複数の検定（2級／1級／交通誘導 など）を管理できる
+   - 「index.html を書き出す」で、学習アプリ本体に問題を埋め込んだ
+     完成版HTMLを生成する（＝GitHubにアップすればそのまま公開できる）
+   - 「作業ファイル(JSON)」は、あとで編集を再開するための保存用
+   ===================================================================== */
+
+/* ---------- 初期データ（現在アプリに入っている内容） ---------- */
+let exams = INITIAL_EXAMS;   // ページ下部で読み込む
+let examIdx = 0;             // 編集中の検定
+let currentId = null;        // 編集中の問題ID（null = 新規）
+let mediaState = { type: "none", src: "", caption: "" };
+
+const MAX_VIDEO_MB = 10;
+const IMG_MAX_EDGE = 800;
+
+/* ---------- ユーティリティ ---------- */
+const $ = (id) => document.getElementById(id);
+const today = () => new Date().toISOString().slice(0, 10);
+const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
+const curExam = () => exams[examIdx];
+
+/* IDは検定ごとに連番。全体で重複しないよう検定番号を接頭辞に含める */
+function nextId() {
+  const all = exams.flatMap(e => e.questions.map(q => q.id));
+  let n = 0;
+  all.forEach(id => { const m = /(\d+)$/.exec(id || ""); if (m) n = Math.max(n, parseInt(m[1], 10)); });
+  return "q" + String(n + 1).padStart(4, "0");
+}
+
+/* ---------- 検定タブ ---------- */
+function renderExamTabs() {
+  const wrap = $("examTabs");
+  wrap.innerHTML = "";
+  exams.forEach((e, i) => {
+    const b = document.createElement("button");
+    b.className = "exam-tab" + (i === examIdx ? " active" : "");
+    b.innerHTML = `${esc(e.meta.title)}<span class="n">${e.questions.length}問</span>`;
+    b.onclick = () => { examIdx = i; currentId = null; clearForm(); renderAll(); };
+    wrap.appendChild(b);
+  });
+}
+$("btnAddExam").onclick = () => {
+  const name = prompt("追加する検定の名前を入力してください。\n例：雑踏警備業務検定2級");
+  if (!name || !name.trim()) return;
+  exams.push({ meta: { title: name.trim(), version: 1, updatedAt: today() }, questions: [] });
+  examIdx = exams.length - 1;
+  clearForm();
+  renderAll();
+};
+$("btnRenameExam").onclick = () => {
+  const name = prompt("検定の名前を変更します。", curExam().meta.title);
+  if (!name || !name.trim()) return;
+  curExam().meta.title = name.trim();
+  renderAll();
+};
+$("btnDeleteExam").onclick = () => {
+  if (exams.length <= 1) { alert("最後の1つは削除できません。"); return; }
+  if (!confirm(`「${curExam().meta.title}」を、含まれる${curExam().questions.length}問ごと削除します。よろしいですか？`)) return;
+  exams.splice(examIdx, 1);
+  examIdx = 0;
+  clearForm();
+  renderAll();
+};
+
+/* ---------- 問題一覧 ---------- */
+function renderList() {
+  const filter = $("catFilter").value;
+  const list = $("qList");
+  list.innerHTML = "";
+  const qs = curExam().questions.filter(q => filter === "__all__" || q.category === filter);
+  if (qs.length === 0) {
+    list.innerHTML = '<p class="empty-note">問題がありません。<br>「＋ 新規」から追加してください。</p>';
+  }
+  qs.forEach(q => {
+    const div = document.createElement("div");
+    div.className = "q-item" + (q.id === currentId ? " active" : "");
+    const flag = q.media && q.media.type !== "none"
+      ? `<span class="media-flag">📎 ${q.media.type === "image" ? "画像" : "動画"}</span>` : "";
+    div.innerHTML = `<span class="cat">${esc(q.category)}</span> ${flag}<p class="txt">${esc(q.question)}</p>`;
+    div.onclick = () => loadToForm(q.id);
+    list.appendChild(div);
+  });
+  renderCatOptions();
+}
+function renderCatOptions() {
+  const cats = [...new Set(curExam().questions.map(q => q.category))];
+  const sel = $("catFilter");
+  const cur = sel.value;
+  sel.innerHTML = '<option value="__all__">すべての分野</option>' +
+    cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+  $("catOptions").innerHTML = cats.map(c => `<option value="${esc(c)}">`).join("");
+}
+$("catFilter").onchange = renderList;
+
+function renderAll() {
+  renderExamTabs();
+  renderList();
+  $("editingExam").textContent = `編集中の検定：${curExam().meta.title}`;
+}
+
+/* ---------- フォーム ---------- */
+function buildChoiceRows() {
+  const wrap = $("choiceRows");
+  wrap.innerHTML = "";
+  for (let i = 0; i < 4; i++) {
+    const row = document.createElement("div");
+    row.className = "choice-row";
+    row.innerHTML = `
+      <input type="radio" name="correct" value="${i}" id="r${i}" ${i === 0 ? "checked" : ""}>
+      <span class="num">${i + 1}</span>
+      <input type="text" class="choice-input" id="c${i}" placeholder="選択肢 ${i + 1}">`;
+    wrap.appendChild(row);
+  }
+}
+function clearForm() {
+  currentId = null;
+  $("formTitle").textContent = "新しい問題の作成";
+  $("fCat").value = ""; $("fQuestion").value = ""; $("fExp").value = "";
+  for (let i = 0; i < 4; i++) $("c" + i).value = "";
+  document.querySelector('input[name=correct][value="0"]').checked = true;
+  setMedia({ type: "none", src: "", caption: "" });
+  $("saveMsg").textContent = "";
+}
+function loadToForm(id) {
+  const q = curExam().questions.find(x => x.id === id);
+  if (!q) return;
+  currentId = id;
+  $("formTitle").textContent = `問題の編集（${id}）`;
+  $("fCat").value = q.category;
+  $("fQuestion").value = q.question;
+  $("fExp").value = q.explanation || "";
+  for (let i = 0; i < 4; i++) $("c" + i).value = q.choices[i] ?? "";
+  document.querySelector(`input[name=correct][value="${q.answer}"]`).checked = true;
+  setMedia(q.media || { type: "none", src: "", caption: "" });
+  $("saveMsg").textContent = "";
+  renderList();
+}
+function readForm() {
+  return {
+    id: currentId || nextId(),
+    category: $("fCat").value.trim() || "未分類",
+    question: $("fQuestion").value.trim(),
+    choices: [0, 1, 2, 3].map(i => $("c" + i).value.trim()),
+    answer: parseInt(document.querySelector("input[name=correct]:checked").value, 10),
+    explanation: $("fExp").value.trim(),
+    media: { ...mediaState, caption: $("mediaCaption").value.trim() }
+  };
+}
+function validateForm(q) {
+  if (!q.question) return "問題文を入力してください。";
+  if (q.choices.some(c => !c)) return "選択肢は4つすべて入力してください。";
+  if (new Set(q.choices).size !== 4) return "選択肢に同じ文が含まれています。";
+  return null;
+}
+
+/* ---------- メディア ---------- */
+function setMedia(m) {
+  mediaState = { type: m.type || "none", src: m.src || "", caption: m.caption || "" };
+  $("fMediaType").value = mediaState.type;
+  $("mediaUrl").value = /^https?:/.test(mediaState.src) ? mediaState.src : "";
+  $("mediaCaption").value = mediaState.caption;
+  $("mediaControls").classList.toggle("hidden", mediaState.type === "none");
+  $("mediaFile").accept = mediaState.type === "image" ? "image/*" : "video/*";
+  $("mediaHint").textContent = mediaState.type === "image"
+    ? "画像は自動で縮小してファイル内に埋め込みます（圏外でも表示できます）。"
+    : `動画ファイルは${MAX_VIDEO_MB}MBまで埋め込めます。長い動画はURL指定を推奨（URL動画はオンライン時のみ再生）。`;
+  $("sizeWarn").style.display = "none";
+  renderMediaPreview();
+}
+function renderMediaPreview() {
+  const box = $("mediaPreview");
+  box.innerHTML = "";
+  if (mediaState.type === "none" || !mediaState.src) return;
+  const el = mediaState.type === "image"
+    ? Object.assign(document.createElement("img"), { src: mediaState.src })
+    : Object.assign(document.createElement("video"), { src: mediaState.src, controls: true });
+  box.appendChild(el);
+}
+$("fMediaType").onchange = () => setMedia({ type: $("fMediaType").value, src: "", caption: $("mediaCaption").value });
+$("mediaUrl").onchange = () => { const u = $("mediaUrl").value.trim(); if (u) { mediaState.src = u; renderMediaPreview(); } };
+$("mediaFile").onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (mediaState.type === "image") embedImage(file); else embedVideo(file);
+  e.target.value = "";
+};
+function embedImage(file) {
+  const img = new Image();
+  const reader = new FileReader();
+  reader.onload = () => { img.src = reader.result; };
+  img.onload = () => {
+    const scale = Math.min(1, IMG_MAX_EDGE / Math.max(img.width, img.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+    mediaState.src = canvas.toDataURL("image/jpeg", 0.82);
+    renderMediaPreview();
+  };
+  reader.readAsDataURL(file);
+}
+function embedVideo(file) {
+  const mb = file.size / (1024 * 1024);
+  if (mb > MAX_VIDEO_MB) {
+    const w = $("sizeWarn");
+    w.textContent = `この動画は ${mb.toFixed(1)}MB あります。埋め込み上限（${MAX_VIDEO_MB}MB）を超えるため、動画を短くするかURL指定をご利用ください。`;
+    w.style.display = "block";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => { mediaState.src = reader.result; renderMediaPreview(); };
+  reader.readAsDataURL(file);
+}
+
+/* ---------- 保存・複製・削除 ---------- */
+$("btnSave").onclick = () => {
+  const q = readForm();
+  const err = validateForm(q);
+  if (err) { alert(err); return; }
+  const arr = curExam().questions;
+  const i = arr.findIndex(x => x.id === q.id);
+  if (i >= 0) arr[i] = q; else arr.push(q);
+  currentId = q.id;
+  curExam().meta.updatedAt = today();
+  renderAll();
+  $("saveMsg").textContent = "✓ 保存しました";
+};
+$("btnDup").onclick = () => {
+  const q = readForm();
+  const err = validateForm(q);
+  if (err) { alert(err); return; }
+  q.id = nextId();
+  curExam().questions.push(q);
+  loadToForm(q.id);
+  renderAll();
+  $("saveMsg").textContent = "✓ 複製しました";
+};
+$("btnDelete").onclick = () => {
+  if (!currentId) { alert("削除する問題が選択されていません。"); return; }
+  if (!confirm("この問題を削除しますか？（元に戻せません）")) return;
+  curExam().questions = curExam().questions.filter(q => q.id !== currentId);
+  clearForm();
+  renderAll();
+};
+$("btnNew").onclick = () => { clearForm(); renderList(); };
+
+/* ---------- 書き出し：ファイルをダウンロードさせる共通処理 ---------- */
+function download(filename, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ---------- ★ index.html の書き出し（GitHub公開用） ----------
+   アプリ本体のテンプレートに、今の問題データを差し込んで完成版HTMLを作る。 */
+$("btnExportApp").onclick = () => {
+  const total = exams.reduce((s, e) => s + e.questions.length, 0);
+  if (total === 0) { alert("問題が1問もありません。"); return; }
+
+  // テンプレートを取り出す（HTMLを壊さないため </scr + ipt> を退避してあるので元に戻す）
+  // ※ソース中に閉じscriptタグの文字列をそのまま書くとHTMLが途中で終わるため、分割して組み立てる
+  const CLOSE_TAG = "<" + "/script>";
+  const tpl = $("appTemplate").textContent.split("<\\/script>").join(CLOSE_TAG);
+
+  // 問題データをJSONにしてテンプレートへ差し込む
+  const dataJson = JSON.stringify(exams, null, 2);
+  const html = tpl.replace("__EXAMS_DATA__", () => dataJson);
+
+  // 差し込めたか安全確認
+  if (html.includes("__EXAMS_DATA__")) { alert("書き出しに失敗しました（テンプレートの差し込み位置が見つかりません）。"); return; }
+
+  download("index.html", html, "text/html;charset=utf-8");
+  alert(`index.html を書き出しました（全${total}問）。\n\nこのファイルをGitHubのリポジトリにアップロードすれば公開できます。\n※ファイル名は index.html のまま変えないでください。`);
+};
+
+/* ---------- 作業ファイル（JSON）の保存・読み込み ---------- */
+$("btnExportJson").onclick = () => {
+  exams.forEach(e => e.meta.updatedAt = today());
+  download("questions.json", JSON.stringify(exams, null, 2), "application/json");
+};
+$("btnImport").onclick = () => $("fileInput").click();
+$("fileInput").onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      let obj = JSON.parse(reader.result);
+      // 旧形式（単一検定のオブジェクト）も読めるようにする
+      if (!Array.isArray(obj)) {
+        if (obj && Array.isArray(obj.questions)) obj = [obj];
+        else throw new Error("形式が不正です");
+      }
+      obj.forEach(e => {
+        if (!e.meta || !Array.isArray(e.questions)) throw new Error("形式が不正です");
+      });
+      exams = obj;
+      examIdx = 0;
+      clearForm();
+      renderAll();
+      const total = exams.reduce((s, e) => s + e.questions.length, 0);
+      alert(`読み込みました（${exams.length}検定 / 全${total}問）。`);
+    } catch (err) {
+      alert("読み込めませんでした：ファイルの形式が正しくありません。");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+};
+
+/* ---------- プレビュー ---------- */
+$("btnPreview").onclick = () => {
+  const q = readForm();
+  const err = validateForm(q);
+  if (err) { alert(err); return; }
+  let mediaHtml = "";
+  if (q.media.type === "image" && q.media.src)
+    mediaHtml = `<img src="${q.media.src}" alt="">`;
+  if (q.media.type === "video" && q.media.src)
+    mediaHtml = `<video src="${q.media.src}" controls playsinline></video>`;
+  if (mediaHtml && q.media.caption)
+    mediaHtml += `<p class="hint" style="text-align:center">${esc(q.media.caption)}</p>`;
+  $("pvBody").innerHTML = `
+    <p class="pv-q">${esc(q.question)}</p>
+    ${q.choices.map((c, i) =>
+      `<div class="pv-choice ${i === q.answer ? "correct" : ""}">${esc(c)}${i === q.answer ? "　←正解" : ""}</div>`).join("")}
+    <div class="pv-exp"><strong>解説：</strong>${esc(q.explanation) || "（未入力）"}${mediaHtml}</div>`;
+  $("pvDialog").showModal();
+};
+$("pvClose").onclick = () => $("pvDialog").close();
+
+/* ---------- 初期化 ---------- */
+buildChoiceRows();
+renderAll();
+clearForm();
+</script>
+</body>
+</html>
