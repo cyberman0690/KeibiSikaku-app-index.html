@@ -1,254 +1,57 @@
+
+
+Index · HTML
 <!DOCTYPE html>
-<html lang="ja"><head>
+<html lang="ja">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>資格の塔｜警備検定トレーニング</title>
-<style>
-  :root{
-    --blue:#2f80ed;         /* 晴れた空の青（メイン） */
-    --blue-deep:#1b5fc2;
-    --blue-soft:#e8f2ff;
-    --sun:#ffc531;          /* 太陽の黄（アクセント） */
-    --sun-soft:#fff6dd;
-    --bg1:#f4faff;          /* 背景グラデーション（上） */
-    --bg2:#e6f1ff;          /* 背景グラデーション（下） */
-    --card:#ffffff;
-    --ink:#243247;
-    --sub:#64748b;
-    --line:#d9e6f5;
-    --ok:#1f9d5b;
-    --ok-bg:#e7f7ee;
-    --ng:#e5484d;
-    --ng-bg:#fdecec;
-    --shadow:0 6px 20px rgba(47,128,237,.10);
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html{font-size:18px}
-  body{
-    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
-    background:linear-gradient(180deg,var(--bg1),var(--bg2));
-    color:var(--ink);line-height:1.7;min-height:100vh;
-  }
-  .sunbar{height:8px;background:linear-gradient(90deg,var(--sun),#ffd96b 50%,var(--sun))}
-  header{
-    background:linear-gradient(135deg,#5aa7ff,var(--blue));color:#fff;
-    padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;
-    box-shadow:0 2px 12px rgba(47,128,237,.25);
-  }
-  header h1{font-size:1.05rem;font-weight:800;letter-spacing:.05em;display:flex;align-items:center;gap:8px}
-  header .tag{font-size:.72rem;background:var(--sun);color:#5a4300;
-    padding:2px 10px;border-radius:99px;font-weight:700;white-space:nowrap}
-  main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
-  main.wide{max-width:1100px}
-
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
-    padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
-
-  button{font:inherit;cursor:pointer;border:none;border-radius:12px}
-  .btn-main{
-    display:block;width:100%;min-height:60px;padding:14px;
-    background:linear-gradient(135deg,#4d9aff,var(--blue));color:#fff;
-    font-size:1.1rem;font-weight:800;box-shadow:0 4px 14px rgba(47,128,237,.35);
-  }
-  .btn-main:active{background:var(--blue-deep);box-shadow:none}
-  .btn-sub{
-    display:block;width:100%;min-height:52px;padding:12px;
-    background:#fff;color:var(--blue);border:2px solid var(--blue);
-    font-size:1rem;font-weight:700;margin-top:10px;
-  }
-  .btn-sun{
-    display:block;width:100%;min-height:52px;padding:12px;margin-top:10px;
-    background:linear-gradient(135deg,#ffd96b,var(--sun));color:#5a4300;
-    font-size:1rem;font-weight:800;box-shadow:0 3px 10px rgba(255,197,49,.4);
-  }
-  .btn-ghost{
-    display:block;width:100%;min-height:48px;padding:10px;
-    background:none;color:var(--sub);font-size:.95rem;text-decoration:underline;
-  }
-
-  /* ===== ログイン（資格の塔） ===== */
-  .tower-hero{text-align:center;padding:8px 0 4px}
-  .tower-hero svg{width:180px;height:auto}
-  .tower-title{font-size:1.9rem;font-weight:900;letter-spacing:.14em;color:var(--blue-deep);
-    text-align:center;margin:4px 0 2px}
-  .tower-sub{font-size:.85rem;color:var(--sub);text-align:center;margin-bottom:18px}
-  label.f{display:block;font-size:.82rem;font-weight:700;color:var(--sub);margin:14px 0 6px}
-  input[type=text],input[type=email],textarea,select{
-    width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;
-    font:inherit;background:#fff;color:var(--ink)}
-  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue)}
-  .login-note{font-size:.78rem;color:var(--sub);margin-top:12px;text-align:center}
-
-  /* ===== 選択ボタン（検定・分野） ===== */
-  .home-lead{font-size:.95rem;color:var(--sub);margin-bottom:14px}
-  .cat-btn{
-    display:flex;justify-content:space-between;align-items:center;
-    width:100%;min-height:60px;padding:12px 16px;margin-bottom:10px;
-    background:#fff;border:2px solid var(--line);border-radius:14px;
-    font-size:1.02rem;font-weight:700;color:var(--ink);text-align:left;
-  }
-  .cat-btn .count{font-size:.85rem;color:var(--sub);font-weight:400;white-space:nowrap}
-  .cat-btn.selected{border-color:var(--blue);background:var(--blue-soft)}
-  .meta-line{font-size:.8rem;color:var(--sub);text-align:center;margin-top:6px}
-
-  /* ===== 出題 ===== */
-  .progress{display:flex;justify-content:space-between;align-items:center;
-    font-size:.9rem;color:var(--sub);margin-bottom:10px}
-  .bar{height:10px;background:#fff;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
-  .bar > div{height:100%;background:linear-gradient(90deg,#ffd96b,var(--sun));width:0%}
-  .q-cat{display:inline-block;font-size:.75rem;font-weight:700;color:var(--blue-deep);
-    background:var(--blue-soft);border-radius:99px;padding:2px 12px;margin-bottom:10px}
-  .q-text{font-size:1.12rem;font-weight:700;margin-bottom:18px}
-  .choice{
-    display:block;width:100%;min-height:58px;padding:14px 16px;margin-bottom:12px;
-    background:#fff;border:2px solid var(--line);border-radius:14px;
-    font-size:1.02rem;text-align:left;color:var(--ink);
-  }
-  .choice:active{background:var(--blue-soft)}
-  .choice.correct{border-color:var(--ok);background:var(--ok-bg);font-weight:700}
-  .choice.wrong{border-color:var(--ng);background:var(--ng-bg)}
-  .choice:disabled{cursor:default;opacity:1}
-  .choice.dim:disabled{opacity:.5}
-
-  .verdict{display:flex;align-items:center;gap:10px;font-size:1.3rem;font-weight:800;margin-bottom:8px}
-  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
-  .verdict .mark{font-size:1.7rem}
-  .exp-label{font-size:.8rem;font-weight:700;color:var(--sub);letter-spacing:.08em;margin:14px 0 6px}
-  .exp-text{font-size:1rem;white-space:pre-wrap;line-height:1.75}
-  .media-box{margin-top:14px}
-  .media-box img,.media-box video{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
-  .media-cap{font-size:.8rem;color:var(--sub);margin-top:6px;text-align:center}
-  .offline-note{font-size:.8rem;color:var(--ng);margin-top:6px;display:none}
-
-  /* ===== 結果 ===== */
-  .score-big{text-align:center;padding:8px 0 4px}
-  .score-big .num{font-size:3rem;font-weight:900;color:var(--blue)}
-  .score-big .den{font-size:1.1rem;color:var(--sub)}
-  .score-msg{text-align:center;font-weight:700;margin-bottom:14px}
-  .cat-row{display:flex;justify-content:space-between;padding:10px 4px;
-    border-bottom:1px solid var(--line);font-size:.95rem}
-  .cat-row:last-child{border-bottom:none}
-
-  /* ===== 実績 ===== */
-  .ach-progress{height:12px;background:#fff;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:12px 0 18px}
-  .ach-progress > div{height:100%;background:linear-gradient(90deg,#ffd96b,var(--sun));width:0%;transition:width .5s}
-  .ach-card{display:flex;align-items:center;gap:14px;padding:12px;margin-bottom:10px;
-    border:2px solid var(--line);border-radius:14px;background:#fff}
-  .ach-card.unlocked{border-color:var(--sun);background:var(--sun-soft)}
-  .ach-card.locked{opacity:.75}
-  .ach-icon{font-size:1.8rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;
-    background:#fff;border-radius:12px;border:1px solid var(--line);flex-shrink:0}
-  .ach-body{flex:1;min-width:0}
-  .ach-name{font-weight:800;font-size:.98rem}
-  .ach-desc{font-size:.8rem;color:var(--sub)}
-  .ach-state{font-size:.78rem;font-weight:700;color:var(--sub);white-space:nowrap}
-  .ach-card.unlocked .ach-state{color:#8a6d00}
-  .ach-mini-bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:6px}
-  .ach-mini-bar > div{height:100%;background:var(--sun)}
-  .unlock-banner{background:linear-gradient(135deg,#fff7d6,#ffedb0);
-    border:2px solid var(--sun);border-radius:14px;padding:14px 16px;margin-bottom:16px}
-  .unlock-banner h3{font-size:.9rem;color:#5a4300;margin-bottom:8px}
-  .unlock-item{display:flex;align-items:center;gap:10px;padding:4px 0}
-  .unlock-item .ic{font-size:1.3rem}
-
-  /* ===== 編集画面（管理者） ===== */
-  .ed-layout{display:grid;grid-template-columns:330px 1fr;gap:16px}
-  @media (max-width:880px){ .ed-layout{grid-template-columns:1fr} }
-  .exam-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-  .exam-tab{padding:7px 12px;border:2px solid var(--line);background:#fff;border-radius:99px;
-    font-size:.82rem;color:var(--ink);white-space:nowrap}
-  .exam-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:700}
-  .exam-tab .n{opacity:.75;font-size:.75rem;margin-left:4px}
-  .ed-toolrow{display:flex;gap:6px;flex-wrap:wrap}
-  .btn-small{padding:6px 10px;font-size:.8rem;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px}
-  .btn-small.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
-  .btn-small.sun{background:var(--sun);border-color:var(--sun);color:#5a4300;font-weight:700}
-  .btn-small.danger{color:var(--ng);border-color:#f3c1c3}
-  .list-head{display:flex;gap:8px;align-items:center;margin:12px 0}
-  .list-head select{flex:1;padding:8px;font-size:.9rem}
-  .q-item{border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:#fff}
-  .q-item:hover{border-color:var(--blue)}
-  .q-item.active{border-color:var(--blue);background:var(--blue-soft)}
-  .q-item .cat{font-size:.7rem;font-weight:700;color:var(--blue-deep);background:var(--blue-soft);border-radius:99px;padding:1px 8px}
-  .q-item.active .cat{background:#fff}
-  .q-item .txt{font-size:.85rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .q-item .media-flag{font-size:.7rem;color:var(--sub)}
-  .empty-note{font-size:.85rem;color:var(--sub);text-align:center;padding:20px 0}
-  .choice-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-  .choice-row input[type=radio]{width:22px;height:22px;flex-shrink:0;accent-color:var(--blue)}
-  .choice-row .num{width:20px;text-align:center;font-weight:700;color:var(--sub);flex-shrink:0}
-  .hint{font-size:.75rem;color:var(--sub);margin-top:4px}
-  .warn{font-size:.8rem;color:var(--ng);background:var(--ng-bg);border-radius:10px;padding:8px 10px;margin-top:8px;display:none}
-  .media-preview{margin-top:10px}
-  .media-preview img,.media-preview video{max-width:320px;width:100%;border:1px solid var(--line);border-radius:10px;display:block}
-  .form-actions{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
-  .save-msg{font-size:.82rem;color:var(--ok);font-weight:700}
-  .ed-note{font-size:.76rem;color:var(--sub);margin-top:14px;line-height:1.7}
-
-  /* ===== モーダル ===== */
-  .modal-overlay{position:fixed;inset:0;background:rgba(27,63,120,.5);
-    display:none;align-items:center;justify-content:center;padding:20px;z-index:1000}
-  .modal-overlay.show{display:flex}
-  .modal{background:#fff;border-radius:18px;padding:22px;max-width:420px;width:100%;
-    box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:86vh;overflow:auto}
-  .modal.wide{max-width:640px}
-  .modal-msg{font-size:1rem;line-height:1.7;margin-bottom:16px;white-space:pre-wrap}
-  .modal-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-  .modal-actions .btn-main,.modal-actions .btn-sub{margin-top:0;min-height:52px}
-  .pv-q{font-size:1.05rem;font-weight:700;margin-bottom:14px}
-  .pv-choice{display:block;width:100%;min-height:50px;padding:12px;margin-bottom:10px;background:#fff;
-    border:2px solid var(--line);border-radius:12px;text-align:left;font-size:.95rem}
-  .pv-choice.correct{border-color:var(--ok);background:var(--ok-bg);font-weight:700}
-  .pv-exp{font-size:.88rem;background:var(--bg1);border-radius:12px;padding:12px;margin-top:6px;white-space:pre-wrap}
-  .pv-exp img,.pv-exp video{width:100%;border-radius:10px;margin-top:10px;display:block}
-
-  .hidden{display:none}
-  footer{padding:16px;text-align:center;font-size:.72rem;color:var(--sub)}
-</style>
+<link rel="stylesheet" href="common.css">
 </head>
 <body>
 <div class="sunbar"></div>
 <header>
   <h1>🗼 資格の塔</h1>
-  <span class="tag" id="headerTag">警備検定トレーニング</span>
+  <span class="tag">警備検定トレーニング</span>
 </header>
-
+ 
 <main id="mainArea">
-
-  <!-- ========== ログイン ========== -->
+ 
+  <!-- ========== 画面1: ログイン ========== -->
   <section id="screenLogin">
     <div class="card">
       <div class="tower-hero">
         <svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="160" cy="34" r="20" fill="#ffc531"></circle>
-          <circle cx="52" cy="30" r="12" fill="#ffffff"></circle><circle cx="66" cy="34" r="15" fill="#ffffff"></circle><circle cx="40" cy="35" r="10" fill="#ffffff"></circle>
-          <rect x="70" y="120" width="60" height="52" rx="4" fill="#5aa7ff"></rect>
-          <rect x="78" y="86" width="44" height="38" rx="4" fill="#4d9aff"></rect>
-          <rect x="85" y="56" width="30" height="34" rx="4" fill="#2f80ed"></rect>
-          <rect x="92" y="34" width="16" height="26" rx="3" fill="#1b5fc2"></rect>
-          <path d="M100 12 L100 34" stroke="#1b5fc2" stroke-width="3"></path>
-          <path d="M100 12 L122 19 L100 26 Z" fill="#ffc531"></path>
-          <rect x="80" y="132" width="12" height="14" rx="2" fill="#fff6dd"></rect>
-          <rect x="108" y="132" width="12" height="14" rx="2" fill="#fff6dd"></rect>
-          <rect x="86" y="96" width="10" height="11" rx="2" fill="#fff6dd"></rect>
-          <rect x="104" y="96" width="10" height="11" rx="2" fill="#fff6dd"></rect>
-          <rect x="94" y="64" width="12" height="11" rx="2" fill="#fff6dd"></rect>
-          <rect x="30" y="172" width="140" height="8" rx="4" fill="#bcd8f7"></rect>
+          <circle cx="160" cy="34" r="20" fill="#ffc531"/>
+          <circle cx="52" cy="30" r="12" fill="#ffffff"/><circle cx="66" cy="34" r="15" fill="#ffffff"/><circle cx="40" cy="35" r="10" fill="#ffffff"/>
+          <rect x="70" y="120" width="60" height="52" rx="4" fill="#5aa7ff"/>
+          <rect x="78" y="86" width="44" height="38" rx="4" fill="#4d9aff"/>
+          <rect x="85" y="56" width="30" height="34" rx="4" fill="#2f80ed"/>
+          <rect x="92" y="34" width="16" height="26" rx="3" fill="#1b5fc2"/>
+          <path d="M100 12 L100 34" stroke="#1b5fc2" stroke-width="3"/>
+          <path d="M100 12 L122 19 L100 26 Z" fill="#ffc531"/>
+          <rect x="80" y="132" width="12" height="14" rx="2" fill="#fff6dd"/>
+          <rect x="108" y="132" width="12" height="14" rx="2" fill="#fff6dd"/>
+          <rect x="86" y="96" width="10" height="11" rx="2" fill="#fff6dd"/>
+          <rect x="104" y="96" width="10" height="11" rx="2" fill="#fff6dd"/>
+          <rect x="94" y="64" width="12" height="11" rx="2" fill="#fff6dd"/>
+          <rect x="30" y="172" width="140" height="8" rx="4" fill="#bcd8f7"/>
         </svg>
       </div>
       <h2 class="tower-title">資格の塔</h2>
       <p class="tower-sub">一問ずつ、合格まで登っていこう。</p>
-
+ 
       <label class="f" for="loginEmail">メールアドレス（任意）</label>
       <input type="email" id="loginEmail" placeholder="例：guard@example.com" autocomplete="email">
-
+ 
       <button class="btn-main" id="btnChallenger" style="margin-top:18px">挑戦者</button>
       <button class="btn-sun hidden" id="btnLoginEditor">🛠 問題編集（管理者）</button>
       <p class="login-note">メールアドレスは端末の外に送信されません。<br>空欄のままでも「挑戦者」で始められます。</p>
     </div>
   </section>
-
-  <!-- ========== 検定選択 ========== -->
+ 
+  <!-- ========== 画面2: 検定選択 ========== -->
   <section id="screenExam" class="hidden">
     <div class="card">
       <p class="home-lead" id="welcomeLine">学習する検定を選んでください。</p>
@@ -258,8 +61,8 @@
     <button class="btn-sub" id="btnShowAchievements" style="background:#fff">🏅 実績を見る</button>
     <button class="btn-ghost" id="btnLogout">ログイン画面に戻る</button>
   </section>
-
-  <!-- ========== 実績 ========== -->
+ 
+  <!-- ========== 画面3: 実績 ========== -->
   <section id="screenAchievements" class="hidden">
     <div class="card">
       <p class="home-lead" style="margin-bottom:4px">🏅 実績</p>
@@ -270,21 +73,29 @@
     <button class="btn-sub" id="btnAchBack">検定の選択に戻る</button>
     <button class="btn-ghost" id="btnResetProgress">学習記録をリセットする</button>
   </section>
-
-  <!-- ========== 分野選択 ========== -->
+ 
+  <!-- ========== 画面4: 分野選択（制限時間の設定もここ） ========== -->
   <section id="screenHome" class="hidden">
     <div class="card">
       <button class="btn-ghost" id="btnBackToExam" style="text-align:left;padding-left:0;min-height:36px">‹ 検定の選択に戻る</button>
       <p class="home-lead">分野を選んで「学習をはじめる」を押してください。</p>
       <div id="catList"></div>
-      <button class="btn-main" id="btnStart">学習をはじめる</button>
+ 
+      <label class="f" for="timeLimitSelect">⏱ 制限時間</label>
+      <select id="timeLimitSelect"></select>
+      <p class="hint">本試験は20問60分（1問あたり3分）です。時間内に解く練習ができます。</p>
+ 
+      <button class="btn-main" id="btnStart" style="margin-top:14px">学習をはじめる</button>
       <p class="meta-line" id="metaLine"></p>
     </div>
   </section>
-
-  <!-- ========== 出題 ========== -->
+ 
+  <!-- ========== 画面5: 出題 ========== -->
   <section id="screenQuiz" class="hidden">
-    <div class="progress"><span id="progText"></span><span id="progCat"></span></div>
+    <div class="progress">
+      <span id="progText"></span>
+      <span class="timer" id="timerDisplay"></span>
+    </div>
     <div class="bar"><div id="progBar"></div></div>
     <div class="card">
       <span class="q-cat" id="qCat"></span>
@@ -301,8 +112,8 @@
     </div>
     <button class="btn-sub" id="btnQuit" style="border-color:var(--line);color:var(--sub)">中断して分野の選択に戻る</button>
   </section>
-
-  <!-- ========== 結果 ========== -->
+ 
+  <!-- ========== 画面6: 結果 ========== -->
   <section id="screenResult" class="hidden">
     <div class="unlock-banner hidden" id="unlockBanner">
       <h3>🎉 新しい実績を解放しました！</h3>
@@ -317,139 +128,29 @@
     <button class="btn-sub" id="btnResultAch">🏅 実績を見る</button>
     <button class="btn-sub" id="btnHome">分野の選択に戻る</button>
   </section>
-
-  <!-- ========== 問題編集（管理者のみ） ========== -->
-  <section id="screenEditor" class="hidden">
-    <div class="card" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <strong style="font-size:.95rem;margin-right:auto">🛠 問題編集</strong>
-      <button class="btn-small sun" id="btnExportApp">📦 index.html を書き出す（公開用）</button>
-      <button class="btn-small" id="btnExportJson">作業ファイル(JSON)を保存</button>
-      <button class="btn-small" id="btnImportJson">JSONから問題を追加/読込</button>
-      <button class="btn-small" id="btnEditorBack">← 戻る</button>
-    </div>
-
-    <div class="ed-layout">
-      <div class="card" style="margin-bottom:0">
-        <label class="f" style="margin-top:0">検定（タブで切り替え）</label>
-        <div class="exam-tabs" id="examTabs"></div>
-        <div class="ed-toolrow">
-          <button class="btn-small" id="btnAddExam">＋ 検定を追加</button>
-          <button class="btn-small" id="btnRenameExam">名前を変更</button>
-          <button class="btn-small danger" id="btnDeleteExam">削除</button>
-        </div>
-        <div class="list-head">
-          <select id="catFilter"><option value="__all__">すべての分野</option></select>
-          <button class="btn-small primary" id="btnNewQ">＋ 新規</button>
-        </div>
-        <div id="qList"></div>
-      </div>
-
-      <div class="card" style="margin-bottom:0">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-          <strong id="formTitle" style="font-size:.95rem">新しい問題の作成</strong>
-          <button class="btn-small" id="btnPreviewQ">プレビュー</button>
-        </div>
-        <p class="hint" id="editingExam"></p>
-
-        <label class="f">分野（カテゴリ）</label>
-        <input type="text" id="fCat" list="catOptions" placeholder="例：関係法令">
-        <datalist id="catOptions"></datalist>
-
-        <label class="f">問題文</label>
-        <textarea id="fQuestion" rows="3" placeholder="問題文を入力してください"></textarea>
-
-        <label class="f">選択肢（4つ）と正解の指定</label>
-        <div id="choiceRows"></div>
-        <p class="hint">左の○を選ぶとその選択肢が正解になります。学習画面では並び順は毎回シャッフルされます。</p>
-
-        <label class="f">解説文</label>
-        <textarea id="fExp" rows="6" placeholder="答えは「〇〇」。（結論）
-
-【覚え方】
-…と続けると読みやすくなります。改行はそのまま表示されます。"></textarea>
-
-        <label class="f">解説のメディア（挿絵・動画）</label>
-        <select id="fMediaType">
-          <option value="none">なし</option>
-          <option value="image">画像（挿絵・写真）</option>
-          <option value="video">動画（実技の実演など）</option>
-        </select>
-        <div id="mediaControls" class="hidden" style="margin-top:8px">
-          <input type="file" id="mediaFile">
-          <p class="hint" id="mediaHint"></p>
-          <label class="f">または URL を指定（長い動画向け・オンライン時のみ再生）</label>
-          <input type="text" id="mediaUrl" placeholder="https://…（mp4など）">
-          <label class="f">キャプション（説明文）</label>
-          <input type="text" id="mediaCaption" placeholder="例：図：胸骨圧迫の位置">
-          <div class="warn" id="sizeWarn"></div>
-          <div class="media-preview" id="mediaPreview"></div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn-small primary" id="btnSaveQ" style="min-height:44px;padding:10px 18px">この問題を保存</button>
-          <button class="btn-small" id="btnDupQ" style="min-height:44px">複製して新規</button>
-          <button class="btn-small danger" id="btnDeleteQ" style="min-height:44px">この問題を削除</button>
-          <span class="save-msg" id="saveMsg"></span>
-        </div>
-        <p class="ed-note">
-          ⚠ 検定の過去問題や市販問題集の文章の転載は著作権侵害のおそれがあります。自作の問題のみ登録してください。<br>
-          ⚠ 公開ページは誰でも見られます。施設名・所在地など現場が特定できる情報は入力しないでください。<br>
-          💾 変更を公開に反映するには「index.html を書き出す」→ GitHubに上書きアップロードします。あわせて「作業ファイル(JSON)」もバックアップ保存を。
-        </p>
-      </div>
-    </div>
-  </section>
 </main>
-
-<!-- 汎用モーダル（confirm / alert / 入力の代替。スマホでも確実に動く） -->
+ 
+<!-- 汎用モーダル（confirm / alert の代替。スマホでも確実に動く） -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" role="dialog" aria-modal="true">
     <p class="modal-msg" id="modalMsg"></p>
-    <input type="text" id="modalInput" class="hidden" style="margin-bottom:4px">
     <div class="modal-actions">
       <button class="btn-main" id="modalOk">OK</button>
       <button class="btn-sub" id="modalCancel">キャンセル</button>
     </div>
   </div>
 </div>
-
-<!-- プレビュー用モーダル -->
-<div class="modal-overlay" id="pvOverlay">
-  <div class="modal">
-    <p class="modal-msg" style="font-weight:700;margin-bottom:8px">学習画面プレビュー</p>
-    <div id="pvBody"></div>
-    <div class="modal-actions"><button class="btn-sub" id="pvClose" style="margin-top:0">閉じる</button></div>
-  </div>
-</div>
-
-<!-- JSON読み込みモーダル -->
-<div class="modal-overlay" id="jsonOverlay">
-  <div class="modal wide">
-    <p class="modal-msg" style="font-weight:700;margin-bottom:4px">JSONから問題を追加/読み込み</p>
-    <p class="hint" style="margin-bottom:10px">
-      questions.json と同じ形式を貼り付けるか、ファイルを選択してください。<br>
-      対応形式：①検定の配列（全体を置き換え） ②検定1つ {meta, questions}（同名検定に統合/新規追加）
-      ③問題の配列 / ④問題1つ（いま開いている検定に追加）
-    </p>
-    <textarea id="jsonPaste" rows="10" placeholder="例（問題1つを追加する場合）：
-{
-  &quot;category&quot;: &quot;関係法令&quot;,
-  &quot;question&quot;: &quot;…&quot;,
-  &quot;choices&quot;: [&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;],
-  &quot;answer&quot;: 0,
-  &quot;explanation&quot;: &quot;…&quot;
-}" style="font-family:ui-monospace,Consolas,monospace;font-size:.82rem"></textarea>
-    <input type="file" id="jsonFile" accept=".json,application/json" style="margin-top:10px">
-    <div class="modal-actions">
-      <button class="btn-main" id="jsonApply" style="min-height:52px">読み込む</button>
-      <button class="btn-sub" id="jsonCancel">キャンセル</button>
-    </div>
-  </div>
-</div>
-
-<footer>資格の塔 v1.0 ｜ 問題はすべて自作のオリジナル問題です</footer>
-
-<script type="application/json" id="examData">
+ 
+<footer>資格の塔 v2.0 ｜ 問題はすべて自作のオリジナル問題です</footer>
+ 
+<!-- =====================================================================
+     フォールバック用の問題データ
+     通常は同じフォルダの questions.json を読み込んで使う。
+     読み込めない環境（PCでファイルを直接開いた場合など）のみ、
+     ここに埋め込まれたデータを使う。
+     ※問題の更新は questions.json の差し替えだけでよい。
+     ===================================================================== -->
+<script type="application/json" id="fallbackData">
 [
   {
     "meta": {
@@ -1378,137 +1079,140 @@
   }
 ]
 </script>
-
+ 
 <script>
 "use strict";
 /* =====================================================================
-   資格の塔（警備検定トレーニング）
-   - 1ファイル完結：学習画面＋管理者用の問題編集画面を同居
-   - 問題データは下の <script type="application/json" id="examData"> に格納
-   - 編集画面の「index.html を書き出す」で、新しい問題を埋め込んだ
-     このファイル自身の複製を生成する（GitHubに上書きアップすれば公開反映）
+   資格の塔 問題画面 (index.html)
+   ---------------------------------------------------------------------
+   構成（このファイルの読み方）:
+     1. CONFIG   … 設定値。数値や選択肢を変えたいときはここだけ直す
+     2. state    … アプリの状態。実行中に変化する変数はすべてここ
+     3. データ読み込み … questions.json → 失敗時は埋め込みデータ
+     4. 共通部品 … DOM取得・シャッフル・モーダル
+     5. 学習記録・実績
+     6. 各画面の処理 … ログイン → 検定選択 → 分野選択 → 出題 → 結果
+     7. タイマー … 制限時間機能
+   ---------------------------------------------------------------------
+   変更履歴:
+     v2.0 2026-07-13 画面分割・データ外部化・CONFIG/state導入・制限時間追加
+     v1.0 2026-07-12 資格の塔 初版
    ===================================================================== */
-
-/* ---- 起動直後に「まっさらな自分自身のHTML」を保存しておく ----
-   画面描画で変化する前のソースを控えておき、書き出し時に
-   問題データ部分だけ差し替えて新しい index.html を作る。 */
-const PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-
-/* ---- 問題データの読み込み ---- */
-let EXAMS = JSON.parse(document.getElementById("examData").textContent);
-
-/* ---- 管理者判定 ----
-   公開ソースにメールアドレスを平文で載せないため、
-   ハッシュ値（復元できない数値）にして照合する。 */
-const ADMIN_KEY = "3266780251-1987317601";
-function hashA(s){ let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h; }
-function hashB(s){ let h = 2166136261; for (let i = 0; i < s.length; i++) { h = (h ^ s.charCodeAt(i)) >>> 0; h = Math.imul(h, 16777619) >>> 0; } return h; }
-function normalizeEmail(s){
-  return (s || "")
-    .replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)) // 全角→半角
-    .replace(/\s+/g, "")
-    .toLowerCase();
+ 
+/* ============================================================
+   1. CONFIG: 設定値の一元管理（マジックナンバー禁止）
+   ============================================================ */
+const CONFIG = {
+  DATA_URL: "questions.json",          // 問題データの場所（index.htmlと同じフォルダ）
+  EDITOR_URL: "editor.html",           // 編集画面の場所
+  STORE_KEY: "shikaku_tower_progress_v1",  // 学習記録の保存キー
+  ADMIN_KEY: "3266780251-1987317601",          // 管理者メールのハッシュ（平文は置かない）
+  TIMER_WARNING_SEC: 60,               // 残りこの秒数で赤色の警告表示
+  TIME_OPTIONS: [                      // 制限時間の選択肢（分。0=なし）
+    { label: "なし（じっくり解く）", minutes: 0 },
+    { label: "5分",  minutes: 5 },
+    { label: "10分", minutes: 10 },
+    { label: "30分", minutes: 30 },
+    { label: "60分（本試験と同じ）", minutes: 60 }
+  ],
+  PASS_RATE: 90,                       // 合格圏の正答率(%)
+  RETRY_RATE: 70                       // 復習推奨の正答率(%)
+};
+ 
+/* ============================================================
+   2. state: 実行中に変化する状態の一元管理
+   ============================================================ */
+const state = {
+  exams: [],            // 全検定データ（起動時に読み込み）
+  userEmail: "",        // ログイン中のメールアドレス
+  adminMode: false,     // 管理者かどうか
+  currentExam: null,    // 学習中の検定
+  selectedCat: "__all__", // 選択中の分野
+  timeLimitMin: 0,      // 制限時間（分。0=なし）
+  quiz: {               // 出題セッションの状態
+    queue: [],          //   出題する問題の配列
+    idx: 0,             //   現在の問題番号
+    results: [],        //   {q, correct} の記録
+    answered: false,    //   現在の問題に回答済みか
+    streak: 0,          //   連続正解数
+    unlocks: []         //   このセッションで解放した実績
+  },
+  timer: {              // タイマーの状態
+    remainingSec: 0,    //   残り秒数
+    intervalId: null    //   setIntervalのID（停止に使う）
+  },
+  progress: null        // 学習記録（初期化時に読み込み）
+};
+ 
+/* ============================================================
+   3. データ読み込み
+   ============================================================ */
+ 
+/** 問題データの形式チェック。問題があればエラー文字列、なければnullを返す */
+function validateExams(data) {
+  if (!Array.isArray(data) || data.length === 0) return "検定データが空です";
+  for (const exam of data) {
+    if (!exam.meta || !exam.meta.title || !Array.isArray(exam.questions)) return "検定の形式が不正です";
+    for (const q of exam.questions) {
+      if (typeof q.question !== "string" || !Array.isArray(q.choices) || q.choices.length !== 4)
+        return `問題 ${q.id || "?"} の形式が不正です`;
+      if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 3))
+        return `問題 ${q.id || "?"} の正解指定が不正です`;
+    }
+  }
+  return null;
 }
-function isAdminEmail(s){
-  const e = normalizeEmail(s);
-  return e !== "" && (hashA(e) + "-" + hashB(e)) === ADMIN_KEY;
+ 
+/** 埋め込みフォールバックデータを読む */
+function loadFallbackData() {
+  return JSON.parse(document.getElementById("fallbackData").textContent);
 }
-
-/* ====================== 状態 ====================== */
-let userEmail = "";
-let adminMode = false;
-let data = EXAMS[0];           // 学習中の検定
-let selectedCat = "__all__";
-let queue = [], idx = 0, results = [], answered = false;
-let sessionStreak = 0;
-let sessionUnlocks = [];
-
-/* ====================== 学習記録（端末に保存） ====================== */
-const STORE_KEY = "shikaku_tower_progress_v1";
-const defaultProgress = () => ({
-  mastered: {}, totalAnswered: 0, totalCorrect: 0,
-  bestStreak: 0, perfectRuns: 0, unlocked: {}
-});
-let progress = loadProgress();
-function loadProgress(){
+ 
+/**
+ * 問題データを読み込む。
+ * ①questions.json を取得（公開サーバー上での通常ルート）
+ * ②失敗したら埋め込みデータ（ファイル直接開き・オフライン時）
+ */
+async function loadExams() {
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (raw) return Object.assign(defaultProgress(), JSON.parse(raw));
-  } catch (e) { /* 保存できない環境ではメモリ上のみで動作 */ }
-  return defaultProgress();
+    const res = await fetch(CONFIG.DATA_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const err = validateExams(data);
+    if (err) throw new Error(err);
+    return data;
+  } catch (e) {
+    return loadFallbackData();
+  }
 }
-function saveProgress(){
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) {}
-}
-
-/* ====================== 実績 ====================== */
-const ALL_QUESTION_IDS = () => EXAMS.flatMap(e => e.questions.map(q => q.id));
-const ACHIEVEMENTS = [
-  { id: "first", icon: "🔰", name: "はじめの一歩", desc: "問題に1問チャレンジする",
-    check: p => p.totalAnswered >= 1, progressText: p => `${Math.min(p.totalAnswered,1)}/1` },
-  { id: "correct10", icon: "✅", name: "10問正解", desc: "累計で10問正解する",
-    check: p => p.totalCorrect >= 10, progressText: p => `${Math.min(p.totalCorrect,10)}/10` },
-  { id: "streak5", icon: "🔥", name: "5問連続正解", desc: "1回の学習で5問連続で正解する",
-    check: p => p.bestStreak >= 5, progressText: p => `${Math.min(p.bestStreak,5)}/5` },
-  { id: "perfect", icon: "💯", name: "満点達成", desc: "1回の学習をすべて正解で終える",
-    check: p => p.perfectRuns >= 1, progressText: p => `${Math.min(p.perfectRuns,1)}/1` },
-  { id: "master25", icon: "📚", name: "25問マスター", desc: "違う問題を25問、正解する",
-    check: p => Object.keys(p.mastered).length >= 25,
-    progressText: p => `${Math.min(Object.keys(p.mastered).length,25)}/25` },
-  { id: "allclear", icon: "🏆", name: "塔の頂上へ", desc: "登録されている全ての問題を正解する",
-    check: p => { const ids = ALL_QUESTION_IDS(); return ids.length > 0 && ids.every(id => p.mastered[id]); },
-    progressText: p => { const ids = ALL_QUESTION_IDS();
-      return `${ids.filter(id => p.mastered[id]).length}/${ids.length}`; } }
-];
-function recordAnswer(q, isCorrect){
-  progress.totalAnswered++;
-  if (isCorrect) {
-    progress.totalCorrect++;
-    progress.mastered[q.id] = true;
-    sessionStreak++;
-    if (sessionStreak > progress.bestStreak) progress.bestStreak = sessionStreak;
-  } else sessionStreak = 0;
-  const newly = refreshUnlocks();
-  saveProgress();
-  return newly;
-}
-function recordSessionEnd(isPerfect){
-  if (isPerfect) progress.perfectRuns++;
-  const newly = refreshUnlocks();
-  saveProgress();
-  return newly;
-}
-function refreshUnlocks(){
-  const newly = [];
-  ACHIEVEMENTS.forEach(a => {
-    if (!progress.unlocked[a.id] && a.check(progress)) { progress.unlocked[a.id] = true; newly.push(a); }
-  });
-  return newly;
-}
-
-/* ====================== 共通ユーティリティ ====================== */
+ 
+/* ============================================================
+   4. 共通部品
+   ============================================================ */
 const $ = (id) => document.getElementById(id);
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
-const shuffle = (arr) => {
+ 
+/** 配列をシャッフルした新しい配列を返す（元の配列は変えない） */
+function shuffle(arr) {
   const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
   return a;
-};
-const today = () => new Date().toISOString().slice(0,10);
-
-const SCREENS = ["screenLogin","screenExam","screenAchievements","screenHome","screenQuiz","screenResult","screenEditor"];
-function show(screen){
+}
+ 
+const SCREENS = ["screenLogin","screenExam","screenAchievements","screenHome","screenQuiz","screenResult"];
+/** 指定した画面だけを表示する */
+function show(screen) {
   SCREENS.forEach(s => $(s).classList.add("hidden"));
   $(screen).classList.remove("hidden");
-  $("mainArea").classList.toggle("wide", screen === "screenEditor");
   window.scrollTo(0, 0);
 }
-
-/* ---- 自作ダイアログ（confirm/alert/promptの代替）----
-   スマホのホーム画面起動では標準ダイアログが無反応になることがあるため */
-function showConfirm(message, onOk){
+ 
+/** 確認ダイアログ（標準confirmはスマホのホーム画面起動で動かないため自作） */
+function showConfirm(message, onOk) {
   $("modalMsg").textContent = message;
-  $("modalInput").classList.add("hidden");
   $("modalCancel").style.display = "block";
   const overlay = $("modalOverlay");
   const cleanup = () => { overlay.classList.remove("show"); $("modalOk").onclick = null; $("modalCancel").onclick = null; };
@@ -1516,65 +1220,139 @@ function showConfirm(message, onOk){
   $("modalCancel").onclick = cleanup;
   overlay.classList.add("show");
 }
-function showAlert(message, onClose){
+/** 通知ダイアログ（標準alertの代替） */
+function showAlert(message, onClose) {
   $("modalMsg").textContent = message;
-  $("modalInput").classList.add("hidden");
   $("modalCancel").style.display = "none";
   const overlay = $("modalOverlay");
   $("modalOk").onclick = () => { overlay.classList.remove("show"); $("modalOk").onclick = null; if (onClose) onClose(); };
   overlay.classList.add("show");
 }
-function showPrompt(message, initial, onOk){
-  $("modalMsg").textContent = message;
-  const input = $("modalInput");
-  input.classList.remove("hidden");
-  input.value = initial || "";
-  $("modalCancel").style.display = "block";
-  const overlay = $("modalOverlay");
-  const cleanup = () => { overlay.classList.remove("show"); input.classList.add("hidden"); $("modalOk").onclick = null; $("modalCancel").onclick = null; };
-  $("modalOk").onclick = () => { const v = input.value; cleanup(); if (onOk) onOk(v); };
-  $("modalCancel").onclick = cleanup;
-  overlay.classList.add("show");
-  setTimeout(() => input.focus(), 50);
+ 
+/* ---- 管理者判定（メールは平文で持たずハッシュで照合） ---- */
+function hashA(s){ let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h; }
+function hashB(s){ let h = 2166136261; for (let i = 0; i < s.length; i++) { h = (h ^ s.charCodeAt(i)) >>> 0; h = Math.imul(h, 16777619) >>> 0; } return h; }
+/** 全角→半角・小文字化などメール表記の揺れを吸収する */
+function normalizeEmail(s) {
+  return (s || "")
+    .replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+    .replace(/\s+/g, "")
+    .toLowerCase();
 }
-
-/* ====================== ログイン ====================== */
-function refreshLoginAdminButton(){
+function isAdminEmail(s) {
+  const e = normalizeEmail(s);
+  return e !== "" && (hashA(e) + "-" + hashB(e)) === CONFIG.ADMIN_KEY;
+}
+ 
+/* ============================================================
+   5. 学習記録・実績
+   ============================================================ */
+function defaultProgress() {
+  return { mastered: {}, totalAnswered: 0, totalCorrect: 0, bestStreak: 0, perfectRuns: 0, unlocked: {} };
+}
+/** 学習記録を端末から読み込む（保存できない環境ではメモリのみで動く） */
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(CONFIG.STORE_KEY);
+    if (raw) return Object.assign(defaultProgress(), JSON.parse(raw));
+  } catch (e) { /* 保存不可の環境 */ }
+  return defaultProgress();
+}
+function saveProgress() {
+  try { localStorage.setItem(CONFIG.STORE_KEY, JSON.stringify(state.progress)); } catch (e) {}
+}
+ 
+const allQuestionIds = () => state.exams.flatMap(e => e.questions.map(q => q.id));
+ 
+const ACHIEVEMENTS = [
+  { id: "first",     icon: "🔰", name: "はじめの一歩", desc: "問題に1問チャレンジする",
+    check: p => p.totalAnswered >= 1, progressText: p => `${Math.min(p.totalAnswered,1)}/1` },
+  { id: "correct10", icon: "✅", name: "10問正解",     desc: "累計で10問正解する",
+    check: p => p.totalCorrect >= 10, progressText: p => `${Math.min(p.totalCorrect,10)}/10` },
+  { id: "streak5",   icon: "🔥", name: "5問連続正解", desc: "1回の学習で5問連続で正解する",
+    check: p => p.bestStreak >= 5, progressText: p => `${Math.min(p.bestStreak,5)}/5` },
+  { id: "perfect",   icon: "💯", name: "満点達成",     desc: "1回の学習をすべて正解で終える",
+    check: p => p.perfectRuns >= 1, progressText: p => `${Math.min(p.perfectRuns,1)}/1` },
+  { id: "master25",  icon: "📚", name: "25問マスター", desc: "違う問題を25問、正解する",
+    check: p => Object.keys(p.mastered).length >= 25,
+    progressText: p => `${Math.min(Object.keys(p.mastered).length,25)}/25` },
+  { id: "allclear",  icon: "🏆", name: "塔の頂上へ",   desc: "登録されている全ての問題を正解する",
+    check: p => { const ids = allQuestionIds(); return ids.length > 0 && ids.every(id => p.mastered[id]); },
+    progressText: p => { const ids = allQuestionIds();
+      return `${ids.filter(id => p.mastered[id]).length}/${ids.length}`; } }
+];
+ 
+/** 回答を記録し、新しく解放された実績の配列を返す */
+function recordAnswer(q, isCorrect) {
+  const p = state.progress;
+  p.totalAnswered++;
+  if (isCorrect) {
+    p.totalCorrect++;
+    p.mastered[q.id] = true;
+    state.quiz.streak++;
+    if (state.quiz.streak > p.bestStreak) p.bestStreak = state.quiz.streak;
+  } else {
+    state.quiz.streak = 0;
+  }
+  const newly = refreshUnlocks();
+  saveProgress();
+  return newly;
+}
+/** セッション終了を記録し、新しく解放された実績の配列を返す */
+function recordSessionEnd(isPerfect) {
+  if (isPerfect) state.progress.perfectRuns++;
+  const newly = refreshUnlocks();
+  saveProgress();
+  return newly;
+}
+function refreshUnlocks() {
+  const newly = [];
+  ACHIEVEMENTS.forEach(a => {
+    if (!state.progress.unlocked[a.id] && a.check(state.progress)) {
+      state.progress.unlocked[a.id] = true;
+      newly.push(a);
+    }
+  });
+  return newly;
+}
+ 
+/* ============================================================
+   6-1. ログイン画面
+   ============================================================ */
+function refreshLoginAdminButton() {
   $("btnLoginEditor").classList.toggle("hidden", !isAdminEmail($("loginEmail").value));
 }
-$("loginEmail").addEventListener("input", refreshLoginAdminButton);
-$("btnChallenger").onclick = () => {
-  userEmail = normalizeEmail($("loginEmail").value);
-  adminMode = isAdminEmail(userEmail);
-  enterExamSelect();
-};
-$("btnLoginEditor").onclick = () => {
-  userEmail = normalizeEmail($("loginEmail").value);
-  adminMode = true;
-  enterEditor();
-};
-$("btnLogout").onclick = () => {
-  userEmail = ""; adminMode = false;
-  $("loginEmail").value = "";
-  refreshLoginAdminButton();
-  show("screenLogin");
-};
-
-function enterExamSelect(){
-  $("welcomeLine").textContent = adminMode
+function setupLoginScreen() {
+  $("loginEmail").addEventListener("input", refreshLoginAdminButton);
+  $("btnChallenger").onclick = () => {
+    state.userEmail = normalizeEmail($("loginEmail").value);
+    state.adminMode = isAdminEmail(state.userEmail);
+    enterExamSelect();
+  };
+  $("btnLoginEditor").onclick = () => { location.href = CONFIG.EDITOR_URL; };
+  $("btnLogout").onclick = () => {
+    state.userEmail = ""; state.adminMode = false;
+    $("loginEmail").value = "";
+    refreshLoginAdminButton();
+    show("screenLogin");
+  };
+}
+ 
+/* ============================================================
+   6-2. 検定選択画面
+   ============================================================ */
+function enterExamSelect() {
+  $("welcomeLine").textContent = state.adminMode
     ? "ようこそ、管理者さん。学習する検定を選んでください。"
     : "ようこそ、挑戦者！ 学習する検定を選んでください。";
-  $("btnExamEditor").classList.toggle("hidden", !adminMode);
+  $("btnExamEditor").classList.toggle("hidden", !state.adminMode);
   renderExamList();
   show("screenExam");
 }
-$("btnExamEditor").onclick = () => enterEditor();
-
-/* ====================== 検定選択 ====================== */
-function renderExamList(){
+function renderExamList() {
   const list = $("examList");
   list.innerHTML = "";
-  EXAMS.forEach((exam) => {
+  state.exams.forEach((exam) => {
     const count = exam.questions.length;
     const ready = count > 0;
     const b = document.createElement("button");
@@ -1584,91 +1362,120 @@ function renderExamList(){
       (ready ? `<span class="count">${count}問 ›</span>` : `<span class="count">準備中</span>`);
     b.onclick = () => {
       if (!ready) { showAlert("この検定はまだ問題が登録されていません。"); return; }
-      data = exam; selectedCat = "__all__";
-      renderHome(); show("screenHome");
+      state.currentExam = exam;
+      state.selectedCat = "__all__";
+      renderHome();
+      show("screenHome");
     };
     list.appendChild(b);
   });
 }
-
-/* ====================== 実績画面 ====================== */
-function renderAchievements(){
-  const unlockedCount = ACHIEVEMENTS.filter(a => progress.unlocked[a.id]).length;
+function setupExamScreen() {
+  $("btnExamEditor").onclick = () => { location.href = CONFIG.EDITOR_URL; };
+  $("btnShowAchievements").onclick = () => { renderAchievements(); show("screenAchievements"); };
+}
+ 
+/* ============================================================
+   6-3. 実績画面
+   ============================================================ */
+function renderAchievements() {
+  const p = state.progress;
+  const unlockedCount = ACHIEVEMENTS.filter(a => p.unlocked[a.id]).length;
   $("achSummary").textContent =
-    `解放した実績：${unlockedCount} / ${ACHIEVEMENTS.length}　（正解した問題：${Object.keys(progress.mastered).length}問）`;
+    `解放した実績：${unlockedCount} / ${ACHIEVEMENTS.length}　（正解した問題：${Object.keys(p.mastered).length}問）`;
   $("achProgressBar").style.width = `${(unlockedCount / ACHIEVEMENTS.length) * 100}%`;
   const list = $("achList");
   list.innerHTML = "";
   ACHIEVEMENTS.forEach(a => {
-    const on = !!progress.unlocked[a.id];
+    const on = !!p.unlocked[a.id];
     const card = document.createElement("div");
     card.className = "ach-card " + (on ? "unlocked" : "locked");
-    const pt = a.progressText(progress);
+    const pt = a.progressText(p);
     const [cur, max] = pt.split("/").map(Number);
     card.innerHTML = `
       <div class="ach-icon">${on ? a.icon : "🔒"}</div>
       <div class="ach-body">
         <div class="ach-name">${a.name}</div>
         <div class="ach-desc">${a.desc}</div>
-        ${on ? "" : `<div class="ach-mini-bar"><div style="width:${max?Math.min(100,cur/max*100):0}%"></div></div>`}
+        ${on ? "" : `<div class="ach-mini-bar"><div style="width:${max ? Math.min(100, cur / max * 100) : 0}%"></div></div>`}
       </div>
       <div class="ach-state">${on ? "解放済み" : pt}</div>`;
     list.appendChild(card);
   });
 }
-$("btnShowAchievements").onclick = () => { renderAchievements(); show("screenAchievements"); };
-$("btnResultAch").onclick = () => { renderAchievements(); show("screenAchievements"); };
-$("btnAchBack").onclick = () => enterExamSelect();
-$("btnResetProgress").onclick = () => {
-  showConfirm("学習の記録と実績をすべて消去します。よろしいですか？\n（元に戻せません）", () => {
-    progress = defaultProgress(); saveProgress(); renderAchievements();
-  });
-};
-
-/* ====================== 分野選択 ====================== */
-function categories(){
-  const map = new Map();
-  data.questions.forEach(q => map.set(q.category, (map.get(q.category) || 0) + 1));
-  return map;
+function setupAchievementsScreen() {
+  $("btnAchBack").onclick = () => enterExamSelect();
+  $("btnResultAch").onclick = () => { renderAchievements(); show("screenAchievements"); };
+  $("btnResetProgress").onclick = () => {
+    showConfirm("学習の記録と実績をすべて消去します。よろしいですか？\n（元に戻せません）", () => {
+      state.progress = defaultProgress();
+      saveProgress();
+      renderAchievements();
+    });
+  };
 }
-function renderHome(){
+ 
+/* ============================================================
+   6-4. 分野選択画面（制限時間の設定を含む）
+   ============================================================ */
+function renderHome() {
+  const exam = state.currentExam;
   const list = $("catList");
   list.innerHTML = "";
+ 
+  const counts = new Map();
+  exam.questions.forEach(q => counts.set(q.category, (counts.get(q.category) || 0) + 1));
+ 
   const addBtn = (key, label, count) => {
     const b = document.createElement("button");
-    b.className = "cat-btn" + (selectedCat === key ? " selected" : "");
+    b.className = "cat-btn" + (state.selectedCat === key ? " selected" : "");
     b.innerHTML = `<span>${esc(label)}</span><span class="count">${count}問</span>`;
-    b.onclick = () => { selectedCat = key; renderHome(); };
+    b.onclick = () => { state.selectedCat = key; renderHome(); };
     list.appendChild(b);
   };
-  addBtn("__all__", "すべての分野", data.questions.length);
-  categories().forEach((count, cat) => addBtn(cat, cat, count));
+  addBtn("__all__", "すべての分野", exam.questions.length);
+  counts.forEach((count, cat) => addBtn(cat, cat, count));
+ 
   $("metaLine").textContent =
-    `${data.meta.title}（更新日: ${data.meta.updatedAt || "不明"} / 全${data.questions.length}問）`;
+    `${exam.meta.title}（更新日: ${exam.meta.updatedAt || "不明"} / 全${exam.questions.length}問）`;
 }
-$("btnBackToExam").onclick = () => enterExamSelect();
-$("btnStart").onclick = () => {
-  const qs = selectedCat === "__all__" ? data.questions : data.questions.filter(q => q.category === selectedCat);
-  if (qs.length === 0) { showAlert("この分野には問題がありません。"); return; }
-  startQuiz(qs);
-};
-
-/* ====================== 出題 ====================== */
-function startQuiz(questions){
-  queue = shuffle(questions);
-  idx = 0; results = []; sessionStreak = 0; sessionUnlocks = [];
+function setupHomeScreen() {
+  // 制限時間の選択肢をCONFIGから生成（選択肢を増やすときはCONFIGを直す）
+  const sel = $("timeLimitSelect");
+  sel.innerHTML = CONFIG.TIME_OPTIONS
+    .map(o => `<option value="${o.minutes}">${esc(o.label)}</option>`).join("");
+  sel.onchange = () => { state.timeLimitMin = parseInt(sel.value, 10); };
+ 
+  $("btnBackToExam").onclick = () => enterExamSelect();
+  $("btnStart").onclick = () => {
+    const exam = state.currentExam;
+    const qs = state.selectedCat === "__all__"
+      ? exam.questions
+      : exam.questions.filter(q => q.category === state.selectedCat);
+    if (qs.length === 0) { showAlert("この分野には問題がありません。"); return; }
+    startQuiz(qs);
+  };
+}
+ 
+/* ============================================================
+   6-5. 出題画面
+   ============================================================ */
+function startQuiz(questions) {
+  state.quiz = { queue: shuffle(questions), idx: 0, results: [], answered: false, streak: 0, unlocks: [] };
+  startTimer();          // 制限時間なし(0)なら何もしない
   show("screenQuiz");
   renderQuestion();
 }
-function renderQuestion(){
-  answered = false;
-  const q = queue[idx];
-  $("progText").textContent = `問題 ${idx + 1} / ${queue.length}`;
-  $("progCat").textContent = "";
-  $("progBar").style.width = `${(idx / queue.length) * 100}%`;
+function renderQuestion() {
+  const quiz = state.quiz;
+  quiz.answered = false;
+  const q = quiz.queue[quiz.idx];
+  $("progText").textContent = `問題 ${quiz.idx + 1} / ${quiz.queue.length}`;
+  $("progBar").style.width = `${(quiz.idx / quiz.queue.length) * 100}%`;
   $("qCat").textContent = q.category;
   $("qText").textContent = q.question;
   $("feedback").classList.add("hidden");
+ 
   const area = $("choiceArea");
   area.innerHTML = "";
   const correctText = q.choices[q.answer];
@@ -1676,23 +1483,24 @@ function renderQuestion(){
     const b = document.createElement("button");
     b.className = "choice";
     b.textContent = text;
-    b.onclick = () => answer(b, text === correctText, correctText, q);
+    b.onclick = () => answerQuestion(b, text === correctText, correctText, q);
     area.appendChild(b);
   });
 }
-function answer(btn, isCorrect, correctText, q){
-  if (answered) return;
-  answered = true;
-  results.push({ q, correct: isCorrect });
-  const newly = recordAnswer(q, isCorrect);
-  sessionUnlocks.push(...newly);
-
+function answerQuestion(btn, isCorrect, correctText, q) {
+  const quiz = state.quiz;
+  if (quiz.answered) return;
+  quiz.answered = true;
+  quiz.results.push({ q, correct: isCorrect });
+  quiz.unlocks.push(...recordAnswer(q, isCorrect));
+ 
   document.querySelectorAll(".choice").forEach(c => {
     c.disabled = true;
     if (c.textContent === correctText) c.classList.add("correct");
     else if (c === btn && !isCorrect) c.classList.add("wrong");
     else c.classList.add("dim");
   });
+ 
   const v = $("verdict");
   if (isCorrect) {
     v.className = "verdict ok";
@@ -1705,11 +1513,11 @@ function answer(btn, isCorrect, correctText, q){
   }
   $("expText").textContent = q.explanation || "（解説はありません）";
   renderMedia(q.media);
-  $("btnNext").textContent = (idx + 1 >= queue.length) ? "結果を見る" : "次の問題へ";
+  $("btnNext").textContent = (quiz.idx + 1 >= quiz.queue.length) ? "結果を見る" : "次の問題へ";
   $("feedback").classList.remove("hidden");
   $("feedback").scrollIntoView({ behavior: "smooth", block: "start" });
 }
-function renderMedia(media){
+function renderMedia(media) {
   const box = $("mediaBox");
   box.innerHTML = "";
   if (!media || media.type === "none" || !media.src) return;
@@ -1736,31 +1544,40 @@ function renderMedia(media){
     if (typeof navigator !== "undefined" && navigator.onLine === false) note.style.display = "block";
   }
 }
-$("btnNext").onclick = () => {
-  idx++;
-  if (idx >= queue.length) renderResult();
-  else { renderQuestion(); window.scrollTo(0, 0); }
-};
-$("btnQuit").onclick = () => {
-  showConfirm("学習を中断して分野の選択に戻りますか？\n（この回の成績は保存されません）", () => show("screenHome"));
-};
-
-/* ====================== 結果 ====================== */
-function renderResult(){
-  const total = results.length;
-  const good = results.filter(r => r.correct).length;
+function setupQuizScreen() {
+  $("btnNext").onclick = () => {
+    state.quiz.idx++;
+    if (state.quiz.idx >= state.quiz.queue.length) renderResult();
+    else { renderQuestion(); window.scrollTo(0, 0); }
+  };
+  $("btnQuit").onclick = () => {
+    showConfirm("学習を中断して分野の選択に戻りますか？\n（この回の成績は保存されません）", () => {
+      stopTimer();
+      show("screenHome");
+    });
+  };
+}
+ 
+/* ============================================================
+   6-6. 結果画面
+   ============================================================ */
+function renderResult() {
+  stopTimer();
+  const quiz = state.quiz;
+  const total = quiz.results.length;
+  const good = quiz.results.filter(r => r.correct).length;
   const rate = total ? Math.round((good / total) * 100) : 0;
-  sessionUnlocks.push(...recordSessionEnd(total > 0 && good === total));
-
+  quiz.unlocks.push(...recordSessionEnd(total > 0 && good === total));
+ 
   $("scoreNum").textContent = good;
   $("scoreDen").textContent = ` / ${total}問（正答率 ${rate}%）`;
   $("scoreMsg").textContent =
-    rate >= 90 ? "合格圏です。この調子で塔を登りましょう！" :
-    rate >= 70 ? "あと少し。間違えた問題を復習しましょう。" :
-                 "まずは間違えた問題の解説をじっくり読みましょう。";
-
+    rate >= CONFIG.PASS_RATE  ? "合格圏です。この調子で塔を登りましょう！" :
+    rate >= CONFIG.RETRY_RATE ? "あと少し。間違えた問題を復習しましょう。" :
+                                "まずは間違えた問題の解説をじっくり読みましょう。";
+ 
   const byCat = new Map();
-  results.forEach(r => {
+  quiz.results.forEach(r => {
     const c = byCat.get(r.q.category) || { good: 0, total: 0 };
     c.total++; if (r.correct) c.good++;
     byCat.set(r.q.category, c);
@@ -1773,401 +1590,88 @@ function renderResult(){
     row.innerHTML = `<span>${esc(cat)}</span><span>${v.good} / ${v.total}問</span>`;
     el.appendChild(row);
   });
-
-  const uniq = [...new Map(sessionUnlocks.map(a => [a.id, a])).values()];
+ 
+  const uniq = [...new Map(quiz.unlocks.map(a => [a.id, a])).values()];
   $("unlockBanner").classList.toggle("hidden", uniq.length === 0);
   $("unlockList").innerHTML = uniq.map(a =>
     `<div class="unlock-item"><span class="ic">${a.icon}</span><span><strong>${a.name}</strong>　${a.desc}</span></div>`).join("");
-
-  const wrong = results.filter(r => !r.correct).map(r => r.q);
+ 
+  const wrong = quiz.results.filter(r => !r.correct).map(r => r.q);
   $("btnRetryWrong").classList.toggle("hidden", wrong.length === 0);
   $("btnRetryWrong").onclick = () => startQuiz(wrong);
   show("screenResult");
 }
-$("btnHome").onclick = () => show("screenHome");
-
-/* =====================================================================
-   ここから 問題編集（管理者のみ）
-   ===================================================================== */
-let examIdx = 0, currentId = null;
-let mediaState = { type: "none", src: "", caption: "" };
-const MAX_VIDEO_MB = 10, IMG_MAX_EDGE = 800;
-
-function enterEditor(){
-  if (!adminMode) { showAlert("編集画面は管理者のみ利用できます。"); return; }
-  examIdx = Math.min(examIdx, EXAMS.length - 1);
-  buildChoiceRowsOnce();
-  clearForm();
-  renderEditor();
-  show("screenEditor");
+function setupResultScreen() {
+  $("btnHome").onclick = () => show("screenHome");
 }
-$("btnEditorBack").onclick = () => enterExamSelect();
-
-const curExam = () => EXAMS[examIdx];
-function nextId(){
-  let n = 0;
-  EXAMS.flatMap(e => e.questions).forEach(q => {
-    const m = /(\d+)$/.exec(q.id || ""); if (m) n = Math.max(n, parseInt(m[1], 10));
-  });
-  return "q" + String(n + 1).padStart(4, "0");
+ 
+/* ============================================================
+   7. タイマー（制限時間）
+   ============================================================ */
+ 
+/** 残り秒数を「mm:ss」の形に変換する */
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
 }
-
-function renderEditor(){
-  const tabs = $("examTabs");
-  tabs.innerHTML = "";
-  EXAMS.forEach((e, i) => {
-    const b = document.createElement("button");
-    b.className = "exam-tab" + (i === examIdx ? " active" : "");
-    b.innerHTML = `${esc(e.meta.title)}<span class="n">${e.questions.length}問</span>`;
-    b.onclick = () => { examIdx = i; currentId = null; clearForm(); renderEditor(); };
-    tabs.appendChild(b);
-  });
-  renderQList();
-  $("editingExam").textContent = `編集中の検定：${curExam().meta.title}`;
+/** タイマー表示を更新する */
+function renderTimer() {
+  const disp = $("timerDisplay");
+  if (state.timeLimitMin === 0) { disp.textContent = ""; return; }
+  disp.textContent = `⏱ 残り ${formatTime(state.timer.remainingSec)}`;
+  disp.classList.toggle("warning", state.timer.remainingSec <= CONFIG.TIMER_WARNING_SEC);
 }
-function renderQList(){
-  const filter = $("catFilter").value;
-  const list = $("qList");
-  list.innerHTML = "";
-  const qs = curExam().questions.filter(q => filter === "__all__" || q.category === filter);
-  if (qs.length === 0)
-    list.innerHTML = '<p class="empty-note">問題がありません。<br>「＋ 新規」または「JSONから問題を追加」で登録できます。</p>';
-  qs.forEach(q => {
-    const div = document.createElement("div");
-    div.className = "q-item" + (q.id === currentId ? " active" : "");
-    const flag = q.media && q.media.type !== "none"
-      ? `<span class="media-flag">📎 ${q.media.type === "image" ? "画像" : "動画"}</span>` : "";
-    div.innerHTML = `<span class="cat">${esc(q.category)}</span> ${flag}<p class="txt">${esc(q.question)}</p>`;
-    div.onclick = () => loadToForm(q.id);
-    list.appendChild(div);
-  });
-  const cats = [...new Set(curExam().questions.map(q => q.category))];
-  const sel = $("catFilter");
-  const cur = sel.value;
-  sel.innerHTML = '<option value="__all__">すべての分野</option>' +
-    cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
-  if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
-  $("catOptions").innerHTML = cats.map(c => `<option value="${esc(c)}">`).join("");
+/** 制限時間のカウントダウンを開始する（0=制限なし、なら何もしない） */
+function startTimer() {
+  stopTimer();
+  if (state.timeLimitMin === 0) { renderTimer(); return; }
+  state.timer.remainingSec = state.timeLimitMin * 60;
+  renderTimer();
+  state.timer.intervalId = setInterval(() => {
+    state.timer.remainingSec--;
+    renderTimer();
+    if (state.timer.remainingSec <= 0) onTimeUp();
+  }, 1000);
 }
-$("catFilter").onchange = renderQList;
-
-/* --- 検定の追加・改名・削除 --- */
-$("btnAddExam").onclick = () => {
-  showPrompt("追加する検定の名前を入力してください。\n例：雑踏警備業務検定2級", "", (name) => {
-    if (!name || !name.trim()) return;
-    EXAMS.push({ meta: { title: name.trim(), version: 1, updatedAt: today() }, questions: [] });
-    examIdx = EXAMS.length - 1;
-    clearForm(); renderEditor();
-  });
-};
-$("btnRenameExam").onclick = () => {
-  showPrompt("検定の名前を変更します。", curExam().meta.title, (name) => {
-    if (!name || !name.trim()) return;
-    curExam().meta.title = name.trim();
-    renderEditor();
-  });
-};
-$("btnDeleteExam").onclick = () => {
-  if (EXAMS.length <= 1) { showAlert("最後の1つは削除できません。"); return; }
-  showConfirm(`「${curExam().meta.title}」を、含まれる${curExam().questions.length}問ごと削除します。よろしいですか？`, () => {
-    EXAMS.splice(examIdx, 1);
-    examIdx = 0; clearForm(); renderEditor();
-  });
-};
-
-/* --- 問題フォーム --- */
-let choiceRowsBuilt = false;
-function buildChoiceRowsOnce(){
-  if (choiceRowsBuilt) return;
-  choiceRowsBuilt = true;
-  const wrap = $("choiceRows");
-  for (let i = 0; i < 4; i++) {
-    const row = document.createElement("div");
-    row.className = "choice-row";
-    row.innerHTML = `
-      <input type="radio" name="correct" value="${i}" id="r${i}" ${i === 0 ? "checked" : ""}>
-      <span class="num">${i + 1}</span>
-      <input type="text" id="c${i}" placeholder="選択肢 ${i + 1}">`;
-    wrap.appendChild(row);
+/** タイマーを止める（画面遷移時に必ず呼ぶ） */
+function stopTimer() {
+  if (state.timer.intervalId !== null) {
+    clearInterval(state.timer.intervalId);
+    state.timer.intervalId = null;
   }
 }
-function clearForm(){
-  currentId = null;
-  $("formTitle").textContent = "新しい問題の作成";
-  $("fCat").value = ""; $("fQuestion").value = ""; $("fExp").value = "";
-  for (let i = 0; i < 4; i++) $("c" + i).value = "";
-  const r0 = document.querySelector('input[name=correct][value="0"]');
-  if (r0) r0.checked = true;
-  setMedia({ type: "none", src: "", caption: "" });
-  $("saveMsg").textContent = "";
+/** 時間切れ：それまでの回答で結果画面へ */
+function onTimeUp() {
+  stopTimer();
+  showAlert("⏱ 時間切れです！\nここまでの回答で結果を表示します。", () => renderResult());
 }
-function loadToForm(id){
-  const q = curExam().questions.find(x => x.id === id);
-  if (!q) return;
-  currentId = id;
-  $("formTitle").textContent = `問題の編集（${id}）`;
-  $("fCat").value = q.category;
-  $("fQuestion").value = q.question;
-  $("fExp").value = q.explanation || "";
-  for (let i = 0; i < 4; i++) $("c" + i).value = q.choices[i] ?? "";
-  document.querySelector(`input[name=correct][value="${q.answer}"]`).checked = true;
-  setMedia(q.media || { type: "none", src: "", caption: "" });
-  $("saveMsg").textContent = "";
-  renderQList();
+ 
+/* ============================================================
+   起動処理
+   ============================================================ */
+async function init() {
+  state.progress = loadProgress();
+  state.exams = await loadExams();
+  setupLoginScreen();
+  setupExamScreen();
+  setupAchievementsScreen();
+  setupHomeScreen();
+  setupQuizScreen();
+  setupResultScreen();
+  show("screenLogin");
 }
-function readForm(){
-  return {
-    id: currentId || nextId(),
-    category: $("fCat").value.trim() || "未分類",
-    question: $("fQuestion").value.trim(),
-    choices: [0,1,2,3].map(i => $("c" + i).value.trim()),
-    answer: parseInt(document.querySelector("input[name=correct]:checked").value, 10),
-    explanation: $("fExp").value.trim(),
-    media: { ...mediaState, caption: $("mediaCaption").value.trim() }
-  };
-}
-function validateQ(q){
-  if (!q.question) return "問題文を入力してください。";
-  if (!Array.isArray(q.choices) || q.choices.length !== 4 || q.choices.some(c => !c)) return "選択肢は4つすべて入力してください。";
-  if (new Set(q.choices).size !== 4) return "選択肢に同じ文が含まれています。";
-  if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 3)) return "正解の指定が正しくありません。";
-  return null;
-}
-$("btnSaveQ").onclick = () => {
-  const q = readForm();
-  const err = validateQ(q);
-  if (err) { showAlert(err); return; }
-  const arr = curExam().questions;
-  const i = arr.findIndex(x => x.id === q.id);
-  if (i >= 0) arr[i] = q; else arr.push(q);
-  currentId = q.id;
-  curExam().meta.updatedAt = today();
-  renderEditor();
-  $("saveMsg").textContent = "✓ 保存しました";
-};
-$("btnDupQ").onclick = () => {
-  const q = readForm();
-  const err = validateQ(q);
-  if (err) { showAlert(err); return; }
-  q.id = nextId();
-  curExam().questions.push(q);
-  loadToForm(q.id);
-  renderEditor();
-  $("saveMsg").textContent = "✓ 複製しました";
-};
-$("btnDeleteQ").onclick = () => {
-  if (!currentId) { showAlert("削除する問題が選択されていません。"); return; }
-  showConfirm("この問題を削除しますか？（元に戻せません）", () => {
-    curExam().questions = curExam().questions.filter(q => q.id !== currentId);
-    clearForm(); renderEditor();
-  });
-};
-$("btnNewQ").onclick = () => { clearForm(); renderQList(); };
+init();
+</script>
+</body>
+</html>
+ 
 
-/* --- メディア --- */
-function setMedia(m){
-  mediaState = { type: m.type || "none", src: m.src || "", caption: m.caption || "" };
-  $("fMediaType").value = mediaState.type;
-  $("mediaUrl").value = /^https?:/.test(mediaState.src) ? mediaState.src : "";
-  $("mediaCaption").value = mediaState.caption;
-  $("mediaControls").classList.toggle("hidden", mediaState.type === "none");
-  $("mediaFile").accept = mediaState.type === "image" ? "image/*" : "video/*";
-  $("mediaHint").textContent = mediaState.type === "image"
-    ? "画像は自動で縮小してファイル内に埋め込みます（圏外でも表示できます）。"
-    : `動画ファイルは${MAX_VIDEO_MB}MBまで埋め込めます。長い動画はURL指定を推奨（URL動画はオンライン時のみ再生）。`;
-  $("sizeWarn").style.display = "none";
-  renderMediaPreviewEd();
-}
-function renderMediaPreviewEd(){
-  const box = $("mediaPreview");
-  box.innerHTML = "";
-  if (mediaState.type === "none" || !mediaState.src) return;
-  const el = mediaState.type === "image"
-    ? Object.assign(document.createElement("img"), { src: mediaState.src })
-    : Object.assign(document.createElement("video"), { src: mediaState.src, controls: true });
-  box.appendChild(el);
-}
-$("fMediaType").onchange = () => setMedia({ type: $("fMediaType").value, src: "", caption: $("mediaCaption").value });
-$("mediaUrl").onchange = () => { const u = $("mediaUrl").value.trim(); if (u) { mediaState.src = u; renderMediaPreviewEd(); } };
-$("mediaFile").onchange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (mediaState.type === "image") embedImage(file); else embedVideo(file);
-  e.target.value = "";
-};
-function embedImage(file){
-  const img = new Image();
-  const reader = new FileReader();
-  reader.onload = () => { img.src = reader.result; };
-  img.onload = () => {
-    const scale = Math.min(1, IMG_MAX_EDGE / Math.max(img.width, img.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(img.width * scale);
-    canvas.height = Math.round(img.height * scale);
-    canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-    mediaState.src = canvas.toDataURL("image/jpeg", 0.82);
-    renderMediaPreviewEd();
-  };
-  reader.readAsDataURL(file);
-}
-function embedVideo(file){
-  const mb = file.size / (1024 * 1024);
-  if (mb > MAX_VIDEO_MB) {
-    const w = $("sizeWarn");
-    w.textContent = `この動画は ${mb.toFixed(1)}MB あります。埋め込み上限（${MAX_VIDEO_MB}MB）を超えるため、動画を短くするかURL指定をご利用ください。`;
-    w.style.display = "block";
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => { mediaState.src = reader.result; renderMediaPreviewEd(); };
-  reader.readAsDataURL(file);
-}
 
-/* --- プレビュー --- */
-$("btnPreviewQ").onclick = () => {
-  const q = readForm();
-  const err = validateQ(q);
-  if (err) { showAlert(err); return; }
-  let mediaHtml = "";
-  if (q.media.type === "image" && q.media.src) mediaHtml = `<img src="${q.media.src}" alt="">`;
-  if (q.media.type === "video" && q.media.src) mediaHtml = `<video src="${q.media.src}" controls playsinline></video>`;
-  if (mediaHtml && q.media.caption) mediaHtml += `<p class="hint" style="text-align:center">${esc(q.media.caption)}</p>`;
-  $("pvBody").innerHTML = `
-    <p class="pv-q">${esc(q.question)}</p>
-    ${q.choices.map((c, i) =>
-      `<div class="pv-choice ${i === q.answer ? "correct" : ""}">${esc(c)}${i === q.answer ? "　←正解" : ""}</div>`).join("")}
-    <div class="pv-exp"><strong>解説：</strong>${esc(q.explanation) || "（未入力）"}${mediaHtml}</div>`;
-  $("pvOverlay").classList.add("show");
-};
-$("pvClose").onclick = () => $("pvOverlay").classList.remove("show");
 
-/* --- JSONからの問題追加・読み込み --- */
-$("btnImportJson").onclick = () => { $("jsonPaste").value = ""; $("jsonOverlay").classList.add("show"); };
-$("jsonCancel").onclick = () => $("jsonOverlay").classList.remove("show");
-$("jsonFile").onchange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => { $("jsonPaste").value = reader.result; };
-  reader.readAsText(file);
-  e.target.value = "";
-};
-function normalizeQuestion(raw){
-  const q = {
-    id: typeof raw.id === "string" ? raw.id : "",
-    category: typeof raw.category === "string" && raw.category.trim() ? raw.category.trim() : "未分類",
-    question: typeof raw.question === "string" ? raw.question.trim() : "",
-    choices: Array.isArray(raw.choices) ? raw.choices.map(c => String(c)) : [],
-    answer: raw.answer,
-    explanation: typeof raw.explanation === "string" ? raw.explanation : "",
-    media: (raw.media && typeof raw.media === "object")
-      ? { type: raw.media.type || "none", src: raw.media.src || "", caption: raw.media.caption || "" }
-      : { type: "none", src: "", caption: "" }
-  };
-  return q;
-}
-const looksLikeQuestion = (o) => o && typeof o === "object" && "question" in o && "choices" in o;
-const looksLikeExam = (o) => o && typeof o === "object" && o.meta && Array.isArray(o.questions);
 
-function importQuestionsInto(exam, rawList){
-  const existing = new Set(EXAMS.flatMap(e => e.questions.map(q => q.id)));
-  let added = 0;
-  for (const raw of rawList) {
-    const q = normalizeQuestion(raw);
-    const err = validateQ(q);
-    if (err) throw new Error(`${added + 1}件目の問題：${err}`);
-    if (!q.id || existing.has(q.id)) q.id = nextId();
-    existing.add(q.id);
-    exam.questions.push(q);
-    added++;
-  }
-  exam.meta.updatedAt = today();
-  return added;
-}
-$("jsonApply").onclick = () => {
-  const text = $("jsonPaste").value.trim();
-  if (!text) { showAlert("JSONを貼り付けるか、ファイルを選択してください。"); return; }
-  let obj;
-  try { obj = JSON.parse(text); }
-  catch (e) { showAlert("JSONの形式が正しくありません。\nカンマの付け忘れや括弧の閉じ忘れがないか確認してください。"); return; }
-  try {
-    if (Array.isArray(obj) && obj.length > 0 && obj.every(looksLikeExam)) {
-      // ① 検定の配列 → 全体を置き換え
-      $("jsonOverlay").classList.remove("show");
-      showConfirm(`検定${obj.length}件・全${obj.reduce((s,e)=>s+e.questions.length,0)}問のデータです。\n現在の内容をすべて置き換えます。よろしいですか？`, () => {
-        obj.forEach(e => e.questions.forEach((raw, i) => {
-          const q = normalizeQuestion(raw);
-          const err = validateQ(q);
-          if (err) { showAlert(`「${e.meta.title}」の${i+1}問目：${err}`); throw new Error(err); }
-        }));
-        EXAMS = obj.map(e => ({ meta: { title: e.meta.title, version: e.meta.version || 1, updatedAt: e.meta.updatedAt || today() },
-                                 questions: e.questions.map(normalizeQuestion) }));
-        examIdx = 0; currentId = null; clearForm(); renderEditor();
-        showAlert("すべての問題を置き換えました。");
-      });
-      return;
-    }
-    let added = 0, target = curExam();
-    if (looksLikeExam(obj)) {
-      // ② 検定1つ → 同名検定に統合、なければ新規追加
-      const found = EXAMS.find(e => e.meta.title === obj.meta.title);
-      if (found) { target = found; added = importQuestionsInto(found, obj.questions); }
-      else {
-        const ex = { meta: { title: obj.meta.title, version: obj.meta.version || 1, updatedAt: today() }, questions: [] };
-        EXAMS.push(ex); target = ex;
-        added = importQuestionsInto(ex, obj.questions);
-        examIdx = EXAMS.length - 1;
-      }
-    } else if (Array.isArray(obj) && obj.every(looksLikeQuestion)) {
-      // ③ 問題の配列 → 現在の検定に追加
-      added = importQuestionsInto(curExam(), obj);
-    } else if (looksLikeQuestion(obj)) {
-      // ④ 問題1つ → 現在の検定に追加
-      added = importQuestionsInto(curExam(), [obj]);
-    } else {
-      showAlert("対応していない形式です。\nquestions.json 全体・検定1つ・問題の配列・問題1つ、のいずれかを貼り付けてください。");
-      return;
-    }
-    $("jsonOverlay").classList.remove("show");
-    renderEditor();
-    showAlert(`「${target.meta.title}」に ${added}問を追加しました。\n公開に反映するには「index.html を書き出す」を忘れずに。`);
-  } catch (e) {
-    showAlert("読み込めませんでした：" + e.message);
-  }
-};
 
-/* --- 書き出し --- */
-function download(filename, content, mime){
-  const blob = new Blob([content], { type: mime });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-}
-function buildExportHtml(){
-  // "<" をJSONエスケープ（\u003c）にして、HTMLを壊す文字列（閉じタグ等）を含めない
-  const json = JSON.stringify(EXAMS, null, 2).replace(/</g, "\\u003c");
-  const re = /(<script[^>]*id="examData"[^>]*>)[\s\S]*?(<\/script>)/;
-  if (!re.test(PRISTINE_HTML)) return null;
-  return PRISTINE_HTML.replace(re, (m, open, close) => open + "\n" + json + "\n" + close);
-}
-$("btnExportApp").onclick = () => {
-  const total = EXAMS.reduce((s, e) => s + e.questions.length, 0);
-  if (total === 0) { showAlert("問題が1問もありません。"); return; }
-  const html = buildExportHtml();
-  if (!html) { showAlert("書き出しに失敗しました（データ領域が見つかりません）。"); return; }
-  download("index.html", html, "text/html;charset=utf-8");
-  showAlert(`index.html を書き出しました（全${total}問）。\n\nGitHubのリポジトリに上書きアップロードすると、公開ページに反映されます。\n※ファイル名は index.html のまま変えないでください。`);
-};
-$("btnExportJson").onclick = () => {
-  EXAMS.forEach(e => e.meta.updatedAt = today());
-  download("questions.json", JSON.stringify(EXAMS, null, 2), "application/json");
-};
 
-/* ====================== 初期表示 ====================== */
-refreshLoginAdminButton();
-show("screenLogin");
-</script></body></html>
+
+
+
