@@ -1,12 +1,9 @@
-
-
-Index · HTML
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>資格の塔｜警備検定トレーニング</title>
+<title>資格の塔</title>
 <link rel="stylesheet" href="common.css">
 </head>
 <body>
@@ -15,11 +12,10 @@ Index · HTML
   <h1>🗼 資格の塔</h1>
   <span class="tag">警備検定トレーニング</span>
 </header>
- 
-<main id="mainArea">
- 
-  <!-- ========== 画面1: ログイン ========== -->
-  <section id="screenLogin">
+
+<main>
+  <!-- ホーム＝導入メニュー画面 -->
+  <section>
     <div class="card">
       <div class="tower-hero">
         <svg viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -41,96 +37,44 @@ Index · HTML
       </div>
       <h2 class="tower-title">資格の塔</h2>
       <p class="tower-sub">一問ずつ、合格まで登っていこう。</p>
- 
-      <label class="f" for="loginEmail">メールアドレス（任意）</label>
-      <input type="email" id="loginEmail" placeholder="例：guard@example.com" autocomplete="email">
- 
-      <button class="btn-main" id="btnChallenger" style="margin-top:18px">挑戦者</button>
-      <button class="btn-sun hidden" id="btnLoginEditor">🛠 問題編集（管理者）</button>
-      <p class="login-note">メールアドレスは端末の外に送信されません。<br>空欄のままでも「挑戦者」で始められます。</p>
+
+      <!-- コイン機能ONのとき、現在の塔レベルとコインを表示 -->
+      <div class="hidden" id="towerStatus" style="text-align:center;margin:4px 0 10px">
+        <div class="tower-level" id="homeTowerLevel"></div>
+        <div class="coin-balance">🪙 コイン <strong id="homeCoins">0</strong></div>
+      </div>
+
+      <button class="btn-main" id="btnStartLearning" style="margin-top:8px">学習をはじめる</button>
+      <button class="btn-sub" id="btnAchievements">🏅 実績を見る</button>
+      <button class="btn-sub" id="btnSettings">⚙️ 設定</button>
     </div>
-  </section>
- 
-  <!-- ========== 画面2: 検定選択 ========== -->
-  <section id="screenExam" class="hidden">
-    <div class="card">
-      <p class="home-lead" id="welcomeLine">学習する検定を選んでください。</p>
-      <div id="examList"></div>
-      <button class="btn-sun hidden" id="btnExamEditor">🛠 問題編集（管理者）</button>
+
+    <!-- 設定（同じページ内で表示切替） -->
+    <div class="card hidden" id="settingsPanel">
+      <p class="home-lead" style="margin-bottom:4px">⚙️ 設定</p>
+      <div class="setting-row">
+        <div>
+          <div style="font-weight:700">コイン・ゲーム要素</div>
+          <div class="desc">正解でコインが貯まり、塔が育ちます。集中して勉強したい方はオフにできます。</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="coinToggle"><span class="slider"></span></label>
+      </div>
+      <button class="btn-sub" id="btnSettingsClose">閉じる</button>
     </div>
-    <button class="btn-sub" id="btnShowAchievements" style="background:#fff">🏅 実績を見る</button>
-    <button class="btn-ghost" id="btnLogout">ログイン画面に戻る</button>
-  </section>
- 
-  <!-- ========== 画面3: 実績 ========== -->
-  <section id="screenAchievements" class="hidden">
-    <div class="card">
+
+    <!-- 実績（同じページ内で表示切替） -->
+    <div class="card hidden" id="achPanel">
       <p class="home-lead" style="margin-bottom:4px">🏅 実績</p>
       <p class="meta-line" id="achSummary" style="text-align:left"></p>
       <div class="ach-progress"><div id="achProgressBar"></div></div>
       <div id="achList"></div>
+      <button class="btn-sub" id="btnAchClose">閉じる</button>
+      <button class="btn-ghost" id="btnResetProgress">学習記録をリセットする</button>
     </div>
-    <button class="btn-sub" id="btnAchBack">検定の選択に戻る</button>
-    <button class="btn-ghost" id="btnResetProgress">学習記録をリセットする</button>
-  </section>
- 
-  <!-- ========== 画面4: 分野選択（制限時間の設定もここ） ========== -->
-  <section id="screenHome" class="hidden">
-    <div class="card">
-      <button class="btn-ghost" id="btnBackToExam" style="text-align:left;padding-left:0;min-height:36px">‹ 検定の選択に戻る</button>
-      <p class="home-lead">分野を選んで「学習をはじめる」を押してください。</p>
-      <div id="catList"></div>
- 
-      <label class="f" for="timeLimitSelect">⏱ 制限時間</label>
-      <select id="timeLimitSelect"></select>
-      <p class="hint">本試験は20問60分（1問あたり3分）です。時間内に解く練習ができます。</p>
- 
-      <button class="btn-main" id="btnStart" style="margin-top:14px">学習をはじめる</button>
-      <p class="meta-line" id="metaLine"></p>
-    </div>
-  </section>
- 
-  <!-- ========== 画面5: 出題 ========== -->
-  <section id="screenQuiz" class="hidden">
-    <div class="progress">
-      <span id="progText"></span>
-      <span class="timer" id="timerDisplay"></span>
-    </div>
-    <div class="bar"><div id="progBar"></div></div>
-    <div class="card">
-      <span class="q-cat" id="qCat"></span>
-      <p class="q-text" id="qText"></p>
-      <div id="choiceArea"></div>
-    </div>
-    <div class="card hidden" id="feedback">
-      <div class="verdict" id="verdict"></div>
-      <p id="correctLine" style="font-size:.95rem"></p>
-      <p class="exp-label">解説</p>
-      <p class="exp-text" id="expText"></p>
-      <div class="media-box" id="mediaBox"></div>
-      <button class="btn-main" id="btnNext" style="margin-top:18px">次の問題へ</button>
-    </div>
-    <button class="btn-sub" id="btnQuit" style="border-color:var(--line);color:var(--sub)">中断して分野の選択に戻る</button>
-  </section>
- 
-  <!-- ========== 画面6: 結果 ========== -->
-  <section id="screenResult" class="hidden">
-    <div class="unlock-banner hidden" id="unlockBanner">
-      <h3>🎉 新しい実績を解放しました！</h3>
-      <div id="unlockList"></div>
-    </div>
-    <div class="card">
-      <div class="score-big"><span class="num" id="scoreNum">0</span><span class="den" id="scoreDen">/0問</span></div>
-      <p class="score-msg" id="scoreMsg"></p>
-      <div id="catResult"></div>
-    </div>
-    <button class="btn-main hidden" id="btnRetryWrong">間違えた問題だけ復習する</button>
-    <button class="btn-sub" id="btnResultAch">🏅 実績を見る</button>
-    <button class="btn-sub" id="btnHome">分野の選択に戻る</button>
   </section>
 </main>
- 
-<!-- 汎用モーダル（confirm / alert の代替。スマホでも確実に動く） -->
+
+<!-- 汎用モーダル -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" role="dialog" aria-modal="true">
     <p class="modal-msg" id="modalMsg"></p>
@@ -140,23 +84,17 @@ Index · HTML
     </div>
   </div>
 </div>
- 
-<footer>資格の塔 v2.0 ｜ 問題はすべて自作のオリジナル問題です</footer>
- 
-<!-- =====================================================================
-     フォールバック用の問題データ
-     通常は同じフォルダの questions.json を読み込んで使う。
-     読み込めない環境（PCでファイルを直接開いた場合など）のみ、
-     ここに埋め込まれたデータを使う。
-     ※問題の更新は questions.json の差し替えだけでよい。
-     ===================================================================== -->
+
+<footer>資格の塔 v3.0 ｜ 問題はすべて自作のオリジナル問題です</footer>
+
 <script type="application/json" id="fallbackData">
 [
   {
     "meta": {
       "title": "施設警備業務検定2級",
       "version": 2,
-      "updatedAt": "2026-07-12"
+      "updatedAt": "2026-07-12",
+      "timeLimitMin": 60
     },
     "questions": [
       {
@@ -1065,7 +1003,8 @@ Index · HTML
     "meta": {
       "title": "施設警備業務検定1級",
       "version": 1,
-      "updatedAt": "2026-07-09"
+      "updatedAt": "2026-07-09",
+      "timeLimitMin": 0
     },
     "questions": []
   },
@@ -1073,324 +1012,52 @@ Index · HTML
     "meta": {
       "title": "交通誘導警備業務検定2級",
       "version": 1,
-      "updatedAt": "2026-07-09"
+      "updatedAt": "2026-07-09",
+      "timeLimitMin": 0
     },
     "questions": []
   }
 ]
 </script>
- 
+<script src="app.js"></script>
 <script>
 "use strict";
 /* =====================================================================
-   資格の塔 問題画面 (index.html)
-   ---------------------------------------------------------------------
-   構成（このファイルの読み方）:
-     1. CONFIG   … 設定値。数値や選択肢を変えたいときはここだけ直す
-     2. state    … アプリの状態。実行中に変化する変数はすべてここ
-     3. データ読み込み … questions.json → 失敗時は埋め込みデータ
-     4. 共通部品 … DOM取得・シャッフル・モーダル
-     5. 学習記録・実績
-     6. 各画面の処理 … ログイン → 検定選択 → 分野選択 → 出題 → 結果
-     7. タイマー … 制限時間機能
-   ---------------------------------------------------------------------
-   変更履歴:
-     v2.0 2026-07-13 画面分割・データ外部化・CONFIG/state導入・制限時間追加
-     v1.0 2026-07-12 資格の塔 初版
+   ホーム画面 (home.html)
+   役割: 導入メニュー。「学習をはじめる」で検定・分野選択(select.html)へ。
+        実績はこのページ内で表示。
    ===================================================================== */
- 
-/* ============================================================
-   1. CONFIG: 設定値の一元管理（マジックナンバー禁止）
-   ============================================================ */
-const CONFIG = {
-  DATA_URL: "questions.json",          // 問題データの場所（index.htmlと同じフォルダ）
-  EDITOR_URL: "editor.html",           // 編集画面の場所
-  STORE_KEY: "shikaku_tower_progress_v1",  // 学習記録の保存キー
-  ADMIN_KEY: "3266780251-1987317601",          // 管理者メールのハッシュ（平文は置かない）
-  TIMER_WARNING_SEC: 60,               // 残りこの秒数で赤色の警告表示
-  TIME_OPTIONS: [                      // 制限時間の選択肢（分。0=なし）
-    { label: "なし（じっくり解く）", minutes: 0 },
-    { label: "5分",  minutes: 5 },
-    { label: "10分", minutes: 10 },
-    { label: "30分", minutes: 30 },
-    { label: "60分（本試験と同じ）", minutes: 60 }
-  ],
-  PASS_RATE: 90,                       // 合格圏の正答率(%)
-  RETRY_RATE: 70                       // 復習推奨の正答率(%)
-};
- 
-/* ============================================================
-   2. state: 実行中に変化する状態の一元管理
-   ============================================================ */
-const state = {
-  exams: [],            // 全検定データ（起動時に読み込み）
-  userEmail: "",        // ログイン中のメールアドレス
-  adminMode: false,     // 管理者かどうか
-  currentExam: null,    // 学習中の検定
-  selectedCat: "__all__", // 選択中の分野
-  timeLimitMin: 0,      // 制限時間（分。0=なし）
-  quiz: {               // 出題セッションの状態
-    queue: [],          //   出題する問題の配列
-    idx: 0,             //   現在の問題番号
-    results: [],        //   {q, correct} の記録
-    answered: false,    //   現在の問題に回答済みか
-    streak: 0,          //   連続正解数
-    unlocks: []         //   このセッションで解放した実績
-  },
-  timer: {              // タイマーの状態
-    remainingSec: 0,    //   残り秒数
-    intervalId: null    //   setIntervalのID（停止に使う）
-  },
-  progress: null        // 学習記録（初期化時に読み込み）
-};
- 
-/* ============================================================
-   3. データ読み込み
-   ============================================================ */
- 
-/** 問題データの形式チェック。問題があればエラー文字列、なければnullを返す */
-function validateExams(data) {
-  if (!Array.isArray(data) || data.length === 0) return "検定データが空です";
-  for (const exam of data) {
-    if (!exam.meta || !exam.meta.title || !Array.isArray(exam.questions)) return "検定の形式が不正です";
-    for (const q of exam.questions) {
-      if (typeof q.question !== "string" || !Array.isArray(q.choices) || q.choices.length !== 4)
-        return `問題 ${q.id || "?"} の形式が不正です`;
-      if (!(Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 3))
-        return `問題 ${q.id || "?"} の正解指定が不正です`;
-    }
-  }
-  return null;
+
+let progress = loadProgress();
+let settings = loadSettings();
+let allIds = [];
+
+/** ホームの塔レベル・コイン表示を更新する（機能OFFなら隠す） */
+function renderTowerStatus() {
+  const box = $("towerStatus");
+  if (!settings.coinEnabled) { box.classList.add("hidden"); return; }
+  box.classList.remove("hidden");
+  const { current } = towerLevelFor(progress.coinsTotal);
+  $("homeTowerLevel").textContent = `🗼 Lv.${current.level}「${current.name}」`;
+  $("homeCoins").textContent = progress.coins;
+  // ヒーローの塔も現在のレベルに合わせて描き替える
+  const hero = document.querySelector(".tower-hero");
+  if (hero) hero.innerHTML = towerSVG(current.floors);
 }
- 
-/** 埋め込みフォールバックデータを読む */
-function loadFallbackData() {
-  return JSON.parse(document.getElementById("fallbackData").textContent);
-}
- 
-/**
- * 問題データを読み込む。
- * ①questions.json を取得（公開サーバー上での通常ルート）
- * ②失敗したら埋め込みデータ（ファイル直接開き・オフライン時）
- */
-async function loadExams() {
-  try {
-    const res = await fetch(CONFIG.DATA_URL + "?t=" + Date.now()); // キャッシュ回避
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    const err = validateExams(data);
-    if (err) throw new Error(err);
-    return data;
-  } catch (e) {
-    return loadFallbackData();
-  }
-}
- 
-/* ============================================================
-   4. 共通部品
-   ============================================================ */
-const $ = (id) => document.getElementById(id);
-const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
- 
-/** 配列をシャッフルした新しい配列を返す（元の配列は変えない） */
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
- 
-const SCREENS = ["screenLogin","screenExam","screenAchievements","screenHome","screenQuiz","screenResult"];
-/** 指定した画面だけを表示する */
-function show(screen) {
-  SCREENS.forEach(s => $(s).classList.add("hidden"));
-  $(screen).classList.remove("hidden");
-  window.scrollTo(0, 0);
-}
- 
-/** 確認ダイアログ（標準confirmはスマホのホーム画面起動で動かないため自作） */
-function showConfirm(message, onOk) {
-  $("modalMsg").textContent = message;
-  $("modalCancel").style.display = "block";
-  const overlay = $("modalOverlay");
-  const cleanup = () => { overlay.classList.remove("show"); $("modalOk").onclick = null; $("modalCancel").onclick = null; };
-  $("modalOk").onclick = () => { cleanup(); if (onOk) onOk(); };
-  $("modalCancel").onclick = cleanup;
-  overlay.classList.add("show");
-}
-/** 通知ダイアログ（標準alertの代替） */
-function showAlert(message, onClose) {
-  $("modalMsg").textContent = message;
-  $("modalCancel").style.display = "none";
-  const overlay = $("modalOverlay");
-  $("modalOk").onclick = () => { overlay.classList.remove("show"); $("modalOk").onclick = null; if (onClose) onClose(); };
-  overlay.classList.add("show");
-}
- 
-/* ---- 管理者判定（メールは平文で持たずハッシュで照合） ---- */
-function hashA(s){ let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h; }
-function hashB(s){ let h = 2166136261; for (let i = 0; i < s.length; i++) { h = (h ^ s.charCodeAt(i)) >>> 0; h = Math.imul(h, 16777619) >>> 0; } return h; }
-/** 全角→半角・小文字化などメール表記の揺れを吸収する */
-function normalizeEmail(s) {
-  return (s || "")
-    .replace(/[\uFF01-\uFF5E]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
-    .replace(/\s+/g, "")
-    .toLowerCase();
-}
-function isAdminEmail(s) {
-  const e = normalizeEmail(s);
-  return e !== "" && (hashA(e) + "-" + hashB(e)) === CONFIG.ADMIN_KEY;
-}
- 
-/* ============================================================
-   5. 学習記録・実績
-   ============================================================ */
-function defaultProgress() {
-  return { mastered: {}, totalAnswered: 0, totalCorrect: 0, bestStreak: 0, perfectRuns: 0, unlocked: {} };
-}
-/** 学習記録を端末から読み込む（保存できない環境ではメモリのみで動く） */
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(CONFIG.STORE_KEY);
-    if (raw) return Object.assign(defaultProgress(), JSON.parse(raw));
-  } catch (e) { /* 保存不可の環境 */ }
-  return defaultProgress();
-}
-function saveProgress() {
-  try { localStorage.setItem(CONFIG.STORE_KEY, JSON.stringify(state.progress)); } catch (e) {}
-}
- 
-const allQuestionIds = () => state.exams.flatMap(e => e.questions.map(q => q.id));
- 
-const ACHIEVEMENTS = [
-  { id: "first",     icon: "🔰", name: "はじめの一歩", desc: "問題に1問チャレンジする",
-    check: p => p.totalAnswered >= 1, progressText: p => `${Math.min(p.totalAnswered,1)}/1` },
-  { id: "correct10", icon: "✅", name: "10問正解",     desc: "累計で10問正解する",
-    check: p => p.totalCorrect >= 10, progressText: p => `${Math.min(p.totalCorrect,10)}/10` },
-  { id: "streak5",   icon: "🔥", name: "5問連続正解", desc: "1回の学習で5問連続で正解する",
-    check: p => p.bestStreak >= 5, progressText: p => `${Math.min(p.bestStreak,5)}/5` },
-  { id: "perfect",   icon: "💯", name: "満点達成",     desc: "1回の学習をすべて正解で終える",
-    check: p => p.perfectRuns >= 1, progressText: p => `${Math.min(p.perfectRuns,1)}/1` },
-  { id: "master25",  icon: "📚", name: "25問マスター", desc: "違う問題を25問、正解する",
-    check: p => Object.keys(p.mastered).length >= 25,
-    progressText: p => `${Math.min(Object.keys(p.mastered).length,25)}/25` },
-  { id: "allclear",  icon: "🏆", name: "塔の頂上へ",   desc: "登録されている全ての問題を正解する",
-    check: p => { const ids = allQuestionIds(); return ids.length > 0 && ids.every(id => p.mastered[id]); },
-    progressText: p => { const ids = allQuestionIds();
-      return `${ids.filter(id => p.mastered[id]).length}/${ids.length}`; } }
-];
- 
-/** 回答を記録し、新しく解放された実績の配列を返す */
-function recordAnswer(q, isCorrect) {
-  const p = state.progress;
-  p.totalAnswered++;
-  if (isCorrect) {
-    p.totalCorrect++;
-    p.mastered[q.id] = true;
-    state.quiz.streak++;
-    if (state.quiz.streak > p.bestStreak) p.bestStreak = state.quiz.streak;
-  } else {
-    state.quiz.streak = 0;
-  }
-  const newly = refreshUnlocks();
-  saveProgress();
-  return newly;
-}
-/** セッション終了を記録し、新しく解放された実績の配列を返す */
-function recordSessionEnd(isPerfect) {
-  if (isPerfect) state.progress.perfectRuns++;
-  const newly = refreshUnlocks();
-  saveProgress();
-  return newly;
-}
-function refreshUnlocks() {
-  const newly = [];
-  ACHIEVEMENTS.forEach(a => {
-    if (!state.progress.unlocked[a.id] && a.check(state.progress)) {
-      state.progress.unlocked[a.id] = true;
-      newly.push(a);
-    }
-  });
-  return newly;
-}
- 
-/* ============================================================
-   6-1. ログイン画面
-   ============================================================ */
-function refreshLoginAdminButton() {
-  $("btnLoginEditor").classList.toggle("hidden", !isAdminEmail($("loginEmail").value));
-}
-function setupLoginScreen() {
-  $("loginEmail").addEventListener("input", refreshLoginAdminButton);
-  $("btnChallenger").onclick = () => {
-    state.userEmail = normalizeEmail($("loginEmail").value);
-    state.adminMode = isAdminEmail(state.userEmail);
-    enterExamSelect();
-  };
-  $("btnLoginEditor").onclick = () => { location.href = CONFIG.EDITOR_URL; };
-  $("btnLogout").onclick = () => {
-    state.userEmail = ""; state.adminMode = false;
-    $("loginEmail").value = "";
-    refreshLoginAdminButton();
-    show("screenLogin");
-  };
-}
- 
-/* ============================================================
-   6-2. 検定選択画面
-   ============================================================ */
-function enterExamSelect() {
-  $("welcomeLine").textContent = state.adminMode
-    ? "ようこそ、管理者さん。学習する検定を選んでください。"
-    : "ようこそ、挑戦者！ 学習する検定を選んでください。";
-  $("btnExamEditor").classList.toggle("hidden", !state.adminMode);
-  renderExamList();
-  show("screenExam");
-}
-function renderExamList() {
-  const list = $("examList");
-  list.innerHTML = "";
-  state.exams.forEach((exam) => {
-    const count = exam.questions.length;
-    const ready = count > 0;
-    const b = document.createElement("button");
-    b.className = "cat-btn";
-    if (!ready) b.style.opacity = ".6";
-    b.innerHTML = `<span>${esc(exam.meta.title)}</span>` +
-      (ready ? `<span class="count">${count}問 ›</span>` : `<span class="count">準備中</span>`);
-    b.onclick = () => {
-      if (!ready) { showAlert("この検定はまだ問題が登録されていません。"); return; }
-      state.currentExam = exam;
-      state.selectedCat = "__all__";
-      renderHome();
-      show("screenHome");
-    };
-    list.appendChild(b);
-  });
-}
-function setupExamScreen() {
-  $("btnExamEditor").onclick = () => { location.href = CONFIG.EDITOR_URL; };
-  $("btnShowAchievements").onclick = () => { renderAchievements(); show("screenAchievements"); };
-}
- 
-/* ============================================================
-   6-3. 実績画面
-   ============================================================ */
+
+/** 実績パネルを描画する */
 function renderAchievements() {
-  const p = state.progress;
-  const unlockedCount = ACHIEVEMENTS.filter(a => p.unlocked[a.id]).length;
+  const unlockedCount = ACHIEVEMENTS.filter(a => progress.unlocked[a.id]).length;
   $("achSummary").textContent =
-    `解放した実績：${unlockedCount} / ${ACHIEVEMENTS.length}　（正解した問題：${Object.keys(p.mastered).length}問）`;
+    `解放した実績：${unlockedCount} / ${ACHIEVEMENTS.length}　（正解した問題：${Object.keys(progress.mastered).length}問）`;
   $("achProgressBar").style.width = `${(unlockedCount / ACHIEVEMENTS.length) * 100}%`;
   const list = $("achList");
   list.innerHTML = "";
   ACHIEVEMENTS.forEach(a => {
-    const on = !!p.unlocked[a.id];
+    const on = !!progress.unlocked[a.id];
     const card = document.createElement("div");
     card.className = "ach-card " + (on ? "unlocked" : "locked");
-    const pt = a.progressText(p);
+    const pt = a.progressText(progress, allIds);
     const [cur, max] = pt.split("/").map(Number);
     card.innerHTML = `
       <div class="ach-icon">${on ? a.icon : "🔒"}</div>
@@ -1403,275 +1070,41 @@ function renderAchievements() {
     list.appendChild(card);
   });
 }
-function setupAchievementsScreen() {
-  $("btnAchBack").onclick = () => enterExamSelect();
-  $("btnResultAch").onclick = () => { renderAchievements(); show("screenAchievements"); };
-  $("btnResetProgress").onclick = () => {
-    showConfirm("学習の記録と実績をすべて消去します。よろしいですか？\n（元に戻せません）", () => {
-      state.progress = defaultProgress();
-      saveProgress();
-      renderAchievements();
-    });
-  };
-}
- 
-/* ============================================================
-   6-4. 分野選択画面（制限時間の設定を含む）
-   ============================================================ */
-function renderHome() {
-  const exam = state.currentExam;
-  const list = $("catList");
-  list.innerHTML = "";
- 
-  const counts = new Map();
-  exam.questions.forEach(q => counts.set(q.category, (counts.get(q.category) || 0) + 1));
- 
-  const addBtn = (key, label, count) => {
-    const b = document.createElement("button");
-    b.className = "cat-btn" + (state.selectedCat === key ? " selected" : "");
-    b.innerHTML = `<span>${esc(label)}</span><span class="count">${count}問</span>`;
-    b.onclick = () => { state.selectedCat = key; renderHome(); };
-    list.appendChild(b);
-  };
-  addBtn("__all__", "すべての分野", exam.questions.length);
-  counts.forEach((count, cat) => addBtn(cat, cat, count));
- 
-  $("metaLine").textContent =
-    `${exam.meta.title}（更新日: ${exam.meta.updatedAt || "不明"} / 全${exam.questions.length}問）`;
-}
-function setupHomeScreen() {
-  // 制限時間の選択肢をCONFIGから生成（選択肢を増やすときはCONFIGを直す）
-  const sel = $("timeLimitSelect");
-  sel.innerHTML = CONFIG.TIME_OPTIONS
-    .map(o => `<option value="${o.minutes}">${esc(o.label)}</option>`).join("");
-  sel.onchange = () => { state.timeLimitMin = parseInt(sel.value, 10); };
- 
-  $("btnBackToExam").onclick = () => enterExamSelect();
-  $("btnStart").onclick = () => {
-    const exam = state.currentExam;
-    const qs = state.selectedCat === "__all__"
-      ? exam.questions
-      : exam.questions.filter(q => q.category === state.selectedCat);
-    if (qs.length === 0) { showAlert("この分野には問題がありません。"); return; }
-    startQuiz(qs);
-  };
-}
- 
-/* ============================================================
-   6-5. 出題画面
-   ============================================================ */
-function startQuiz(questions) {
-  state.quiz = { queue: shuffle(questions), idx: 0, results: [], answered: false, streak: 0, unlocks: [] };
-  startTimer();          // 制限時間なし(0)なら何もしない
-  show("screenQuiz");
-  renderQuestion();
-}
-function renderQuestion() {
-  const quiz = state.quiz;
-  quiz.answered = false;
-  const q = quiz.queue[quiz.idx];
-  $("progText").textContent = `問題 ${quiz.idx + 1} / ${quiz.queue.length}`;
-  $("progBar").style.width = `${(quiz.idx / quiz.queue.length) * 100}%`;
-  $("qCat").textContent = q.category;
-  $("qText").textContent = q.question;
-  $("feedback").classList.add("hidden");
- 
-  const area = $("choiceArea");
-  area.innerHTML = "";
-  const correctText = q.choices[q.answer];
-  shuffle(q.choices).forEach(text => {
-    const b = document.createElement("button");
-    b.className = "choice";
-    b.textContent = text;
-    b.onclick = () => answerQuestion(b, text === correctText, correctText, q);
-    area.appendChild(b);
+
+$("btnStartLearning").onclick = () => goTo(CONFIG.PAGES.SELECT);
+$("btnAchievements").onclick = () => { renderAchievements(); $("achPanel").classList.remove("hidden"); $("achPanel").scrollIntoView({ behavior: "smooth" }); };
+$("btnAchClose").onclick = () => $("achPanel").classList.add("hidden");
+$("btnResetProgress").onclick = () => {
+  showConfirm("学習の記録と実績をすべて消去します。よろしいですか？\n（元に戻せません）", () => {
+    progress = defaultProgress();
+    saveProgress(progress);
+    renderAchievements();
+    renderTowerStatus();
   });
-}
-function answerQuestion(btn, isCorrect, correctText, q) {
-  const quiz = state.quiz;
-  if (quiz.answered) return;
-  quiz.answered = true;
-  quiz.results.push({ q, correct: isCorrect });
-  quiz.unlocks.push(...recordAnswer(q, isCorrect));
- 
-  document.querySelectorAll(".choice").forEach(c => {
-    c.disabled = true;
-    if (c.textContent === correctText) c.classList.add("correct");
-    else if (c === btn && !isCorrect) c.classList.add("wrong");
-    else c.classList.add("dim");
-  });
- 
-  const v = $("verdict");
-  if (isCorrect) {
-    v.className = "verdict ok";
-    v.innerHTML = '<span class="mark">○</span> 正解です';
-    $("correctLine").textContent = "";
-  } else {
-    v.className = "verdict ng";
-    v.innerHTML = '<span class="mark">×</span> 不正解';
-    $("correctLine").textContent = `正解：${correctText}`;
-  }
-  $("expText").textContent = q.explanation || "（解説はありません）";
-  renderMedia(q.media);
-  $("btnNext").textContent = (quiz.idx + 1 >= quiz.queue.length) ? "結果を見る" : "次の問題へ";
-  $("feedback").classList.remove("hidden");
-  $("feedback").scrollIntoView({ behavior: "smooth", block: "start" });
-}
-function renderMedia(media) {
-  const box = $("mediaBox");
-  box.innerHTML = "";
-  if (!media || media.type === "none" || !media.src) return;
-  let el;
-  if (media.type === "image") {
-    el = document.createElement("img");
-    el.src = media.src; el.alt = media.caption || "解説図";
-  } else if (media.type === "video") {
-    el = document.createElement("video");
-    el.src = media.src; el.controls = true; el.playsInline = true; el.preload = "metadata";
-  }
-  box.appendChild(el);
-  if (media.caption) {
-    const cap = document.createElement("p");
-    cap.className = "media-cap"; cap.textContent = media.caption;
-    box.appendChild(cap);
-  }
-  const note = document.createElement("p");
-  note.className = "offline-note";
-  note.textContent = "※ この動画はインターネット接続時のみ再生できます";
-  box.appendChild(note);
-  if (media.type === "video" && /^https?:/.test(media.src)) {
-    el.onerror = () => { note.style.display = "block"; };
-    if (typeof navigator !== "undefined" && navigator.onLine === false) note.style.display = "block";
-  }
-}
-function setupQuizScreen() {
-  $("btnNext").onclick = () => {
-    state.quiz.idx++;
-    if (state.quiz.idx >= state.quiz.queue.length) renderResult();
-    else { renderQuestion(); window.scrollTo(0, 0); }
-  };
-  $("btnQuit").onclick = () => {
-    showConfirm("学習を中断して分野の選択に戻りますか？\n（この回の成績は保存されません）", () => {
-      stopTimer();
-      show("screenHome");
-    });
-  };
-}
- 
-/* ============================================================
-   6-6. 結果画面
-   ============================================================ */
-function renderResult() {
-  stopTimer();
-  const quiz = state.quiz;
-  const total = quiz.results.length;
-  const good = quiz.results.filter(r => r.correct).length;
-  const rate = total ? Math.round((good / total) * 100) : 0;
-  quiz.unlocks.push(...recordSessionEnd(total > 0 && good === total));
- 
-  $("scoreNum").textContent = good;
-  $("scoreDen").textContent = ` / ${total}問（正答率 ${rate}%）`;
-  $("scoreMsg").textContent =
-    rate >= CONFIG.PASS_RATE  ? "合格圏です。この調子で塔を登りましょう！" :
-    rate >= CONFIG.RETRY_RATE ? "あと少し。間違えた問題を復習しましょう。" :
-                                "まずは間違えた問題の解説をじっくり読みましょう。";
- 
-  const byCat = new Map();
-  quiz.results.forEach(r => {
-    const c = byCat.get(r.q.category) || { good: 0, total: 0 };
-    c.total++; if (r.correct) c.good++;
-    byCat.set(r.q.category, c);
-  });
-  const el = $("catResult");
-  el.innerHTML = "";
-  byCat.forEach((v, cat) => {
-    const row = document.createElement("div");
-    row.className = "cat-row";
-    row.innerHTML = `<span>${esc(cat)}</span><span>${v.good} / ${v.total}問</span>`;
-    el.appendChild(row);
-  });
- 
-  const uniq = [...new Map(quiz.unlocks.map(a => [a.id, a])).values()];
-  $("unlockBanner").classList.toggle("hidden", uniq.length === 0);
-  $("unlockList").innerHTML = uniq.map(a =>
-    `<div class="unlock-item"><span class="ic">${a.icon}</span><span><strong>${a.name}</strong>　${a.desc}</span></div>`).join("");
- 
-  const wrong = quiz.results.filter(r => !r.correct).map(r => r.q);
-  $("btnRetryWrong").classList.toggle("hidden", wrong.length === 0);
-  $("btnRetryWrong").onclick = () => startQuiz(wrong);
-  show("screenResult");
-}
-function setupResultScreen() {
-  $("btnHome").onclick = () => show("screenHome");
-}
- 
-/* ============================================================
-   7. タイマー（制限時間）
-   ============================================================ */
- 
-/** 残り秒数を「mm:ss」の形に変換する */
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${m}:${String(s).padStart(2, "0")}`;
-}
-/** タイマー表示を更新する */
-function renderTimer() {
-  const disp = $("timerDisplay");
-  if (state.timeLimitMin === 0) { disp.textContent = ""; return; }
-  disp.textContent = `⏱ 残り ${formatTime(state.timer.remainingSec)}`;
-  disp.classList.toggle("warning", state.timer.remainingSec <= CONFIG.TIMER_WARNING_SEC);
-}
-/** 制限時間のカウントダウンを開始する（0=制限なし、なら何もしない） */
-function startTimer() {
-  stopTimer();
-  if (state.timeLimitMin === 0) { renderTimer(); return; }
-  state.timer.remainingSec = state.timeLimitMin * 60;
-  renderTimer();
-  state.timer.intervalId = setInterval(() => {
-    state.timer.remainingSec--;
-    renderTimer();
-    if (state.timer.remainingSec <= 0) onTimeUp();
-  }, 1000);
-}
-/** タイマーを止める（画面遷移時に必ず呼ぶ） */
-function stopTimer() {
-  if (state.timer.intervalId !== null) {
-    clearInterval(state.timer.intervalId);
-    state.timer.intervalId = null;
-  }
-}
-/** 時間切れ：それまでの回答で結果画面へ */
-function onTimeUp() {
-  stopTimer();
-  showAlert("⏱ 時間切れです！\nここまでの回答で結果を表示します。", () => renderResult());
-}
- 
-/* ============================================================
-   起動処理
-   ============================================================ */
-async function init() {
-  state.progress = loadProgress();
-  state.exams = await loadExams();
-  setupLoginScreen();
-  setupExamScreen();
-  setupAchievementsScreen();
-  setupHomeScreen();
-  setupQuizScreen();
-  setupResultScreen();
-  show("screenLogin");
-}
-init();
+};
+
+/* 設定：コイン機能のON/OFF */
+$("btnSettings").onclick = () => {
+  $("coinToggle").checked = settings.coinEnabled;
+  $("settingsPanel").classList.remove("hidden");
+  $("settingsPanel").scrollIntoView({ behavior: "smooth" });
+};
+$("btnSettingsClose").onclick = () => $("settingsPanel").classList.add("hidden");
+$("coinToggle").onchange = () => {
+  settings.coinEnabled = $("coinToggle").checked;
+  saveSettings(settings);
+  renderTowerStatus();
+};
+
+renderTowerStatus();
+
+/* allclear実績の進捗表示のため、全問題IDだけ読み込んでおく */
+(async () => {
+  try {
+    const exams = await loadExams();
+    allIds = exams.flatMap(e => e.questions.map(q => q.id));
+  } catch (e) { allIds = []; }
+})();
 </script>
 </body>
 </html>
- 
-
-
-
-
-
-
-
-
-
